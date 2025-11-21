@@ -2,6 +2,7 @@ React + Vite + Tailwind
 
 # DEVELOPMENT
 
+_nothing interesting yet..._
 _coming soon..._
 
 # LICENSE & CREDITS
