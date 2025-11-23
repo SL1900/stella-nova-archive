@@ -9,4 +9,7 @@ export default defineConfig({
     tailwindcss(),
   ],
   base: '/nova-archive/',
+  server: {
+    host: false
+  }
 })
