@@ -1,9 +1,9 @@
 {
-  "name": "nova-archive",
+  "name": "stella-nova-archive",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.5",
   "type": "module",
-  "homepage": "https://BB-69.github.io/nova-archive",
+  "homepage": "https://BB-69.github.io/stella-nova-archive",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
