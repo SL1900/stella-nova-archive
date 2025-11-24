@@ -6,6 +6,8 @@ A website that acts like an archive containing inscriptions and translations of 
 
 React + Vite + Tailwind
 
+Static database: https://github.com/BB-69/stella-nova-archive-db.git
+
 _nothing interesting yet..._
 _coming soon..._
 
