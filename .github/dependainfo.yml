@@ -1,0 +1,42 @@
+name: Update README on Dependabot PR
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - main
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]' # only trigger on Dependabot PRs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Update README.md
+        run: node scripts/update-dependency-info.js
+
+      - name: Create new branch & push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git checkout -b dependabot-readme-update || git checkout dependabot-readme-update
+          git add README.md
+          git commit -m "Update dependencies list in README" || echo "No changes to commit"
+          git push -u origin dependabot-readme-update --force
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Update dependencies list in README"
+          branch: dependabot-readme-update
+          title: "Update README.md with latest dependencies"
+          body: "This PR updates README.md to match the latest dependency versions."
+          base: main
