@@ -42,7 +42,7 @@ function App() {
       {import.meta.env.DEV && (
         <DebugBox title={title}>
           <div className="mb-2">
-            <ThemeSwitcher />
+            <ThemeSwitcher systemTheme={true} />
           </div>
           <Collapsible title="Route Navigator" subtitle={title}>
             <RouteNavigator

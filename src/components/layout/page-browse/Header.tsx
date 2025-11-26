@@ -1,26 +1,29 @@
-import StellaSoraLogo from "@/assets/stellasora-logo-white.webp";
+// import StellaSoraLogo from "@/assets/stellasora-logo-white.webp";
 import { ThemeSwitcher } from "../../common/theme";
-
 
 const Header = () => {
   return (
-    <header className="flex flex-col h-[64px]
+    <header
+      className="flex flex-col h-[64px]
       border-b border-black/30 [.dark_&]:border-white/30
       shadow-md shadow-black/20 [.dark_&]:shadow-white/20
       bg-white [.dark_&]:bg-black overflow-hidden
       gap-[6px] p-[10px_18px] sticky z-20"
     >
       <div className="flex items-center justify-between gap-4 h-full">
-        <div className="max-[720px]:hidden">
+        {/* <div className="max-[720px]:hidden">
           <img
             src={StellaSoraLogo}
             alt="Stella Sora Logo"
-            className="h-8 w-auto"
+            className="h-8 w-auto brightness-0 [.dark_&]:brightness-100"
           />
-        </div>
+        </div> */}
+        {/* Still thinking if i shouldn't put the game logo on fan site */}
 
-        <span className="overflow-hidden novamodern pt-2
-        font-semibold text-xl whitespace-nowrap">
+        <span
+          className="overflow-hidden novamodern pt-2
+        font-semibold text-xl whitespace-nowrap"
+        >
           Stella Nova Archive
         </span>
 
