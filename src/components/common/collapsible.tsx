@@ -47,7 +47,7 @@ export default function Collapsible({
 
         <button
           className="w-[20px] h-[20px] rounded-[3px] cursor-pointer
-          text-[var(t-c)] [.dark_&]:text-[var(t-c-dark)] text-[14px]/[20px]
+          text-[var(--t-c)] [.dark_&]:text-[var(--t-c-dark)] text-[14px]/[20px]
           hover:bg-[var(--bg-hover)] [.dark_&]:hover:bg-[var(--bg-hover-dark)]"
           onClick={() => setOpen((v) => !v)}
           aria-label="toggle section"

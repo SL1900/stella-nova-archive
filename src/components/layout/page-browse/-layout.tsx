@@ -4,7 +4,7 @@ import Sidebar from "./Sidebar";
 import Browser from "./Browser";
 
 const BrowseLayout = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   return (
     <div
@@ -27,9 +27,7 @@ const BrowseLayout = () => {
           collapsed={collapsed}
         />
 
-        <main className="p-5 overflow-auto">
-          <Browser />
-        </main>
+        <Browser />
       </div>
     </div>
   );

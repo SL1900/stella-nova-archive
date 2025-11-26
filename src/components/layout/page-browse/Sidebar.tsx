@@ -1,8 +1,8 @@
 const items = [
-  { id: "dash", label: "Dashboard", icon: "🏠" },
-  { id: "files", label: "Files", icon: "📁" },
-  { id: "assets", label: "Assets", icon: "🖼️" },
-  { id: "settings", label: "Settings", icon: "⚙️" },
+  { href: "o1", label: "Option1", icon: "📁" },
+  { href: "o2", label: "Option2", icon: "📁" },
+  { href: "o3", label: "Option3", icon: "📁" },
+  { href: "o4", label: "Option4", icon: "📁" },
 ];
 
 const Sidebar = ({
@@ -23,8 +23,10 @@ const Sidebar = ({
       transition-[width] duration-200 z-10
       ${collapsed ? "w-[72px]" : "w-[260px]"}`}
     >
-      <div className="flex items-center h-16 pb-3
-      border-b border-black/30 [.dark_&]:border-white/30">
+      <div
+        className="flex items-center h-16 pb-3
+      border-b border-black/30 [.dark_&]:border-white/30"
+      >
         <button
           onClick={onToggleSidebar}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -32,8 +34,17 @@ const Sidebar = ({
           h-full w-full p-[6px_12px]
           rounded-md hover:bg-black/5 [.dark_&]:hover:bg-white/5"
         >
-          <svg className="absolute" width="20" height="20" viewBox="0 0 24 24" aria-hidden>
-            <path fill="currentColor" d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z" />
+          <svg
+            className="absolute"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            aria-hidden
+          >
+            <path
+              fill="currentColor"
+              d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z"
+            />
           </svg>
           <span
             className={`
@@ -45,29 +56,29 @@ const Sidebar = ({
           </span>
         </button>
       </div>
-      
+
       <div className="flex flex-col justify-between h-full">
         <nav className="flex flex-col gap-2 mt-3" aria-label="Sidebar">
-        {items.map((it) => (
-          <a
-          key={it.id}
-          href={`#/${it.id}`}
-          className="flex items-center p-[10px_10px] rounded-md
+          {items.map((it) => (
+            <a
+              key={it.href}
+              // href={`#/${it.href}`}
+              className="flex items-center p-[10px_10px] rounded-md
           font-semibold text-[var(--t-c)] [.dark_&]:text-[var(--t-c-dark)]
           hover:bg-blue-500/10 [.dark_&]:hover:bg-blue-300/10
           hover:text-blue-600 [.dark_&]:hover:text-blue-400"
-          >
-            <span className="absolute w-6 text-center">{it.icon}</span>
-            <span
-              className={`
+            >
+              <span className="absolute w-6 text-center">{it.icon}</span>
+              <span
+                className={`
                 ml-8 origin-left duration-200
                 ${collapsed ? "opacity-0 scale-x-0" : "opacity-100 scale-x-100"}
               `}
-            >
-              {it.label}
-            </span>
-          </a>
-        ))}
+              >
+                {it.label}
+              </span>
+            </a>
+          ))}
         </nav>
       </div>
     </aside>
