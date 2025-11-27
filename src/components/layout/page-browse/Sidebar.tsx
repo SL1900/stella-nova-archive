@@ -1,8 +1,68 @@
+import { FileSpreadsheet, Link, Menu, UsersRound } from "lucide-react";
+import GitHubLogo from "@/assets/github.svg";
+import NovaTable from "@/assets/nova-alphabet-table.jpg";
+// import NovaTableWritten from "@/assets/nova-alphabet-written-table.png";
+import { useState } from "react";
+import OverlayModal from "../../common/overlay-modal";
+import HyperLink from "../../common/hyperlink";
+
 const items = [
-  { href: "o1", label: "Option1", icon: "📁" },
-  { href: "o2", label: "Option2", icon: "📁" },
-  { href: "o3", label: "Option3", icon: "📁" },
-  { href: "o4", label: "Option4", icon: "📁" },
+  {
+    id: "nova-table",
+    label: "Nova Table",
+    icon: <FileSpreadsheet />,
+    content: (
+      <div className="max-w-[80vh] h-[50vh] flex justify-center">
+        <img
+          src={NovaTable}
+          alt="Nova Alphabet Table"
+          className="max-w-full max-h-full object-contain"
+        />
+      </div>
+    ),
+  },
+  {
+    id: "links",
+    label: "Links",
+    icon: <Link />,
+    content: (
+      <div className="flex flex-col gap-5 max-h-[50vh] overflow-y-auto">
+        <div className="flex flex-row gap-4 underline-offset-1">
+          <img
+            src={GitHubLogo}
+            alt="GitHub"
+            className="w-12 h-12 [.dark_&]:invert"
+          />
+          <div className="flex flex-col">
+            <div className="font-bold">Stella Nova Archive</div>
+            <HyperLink link="https://github.com/BB-69/stella-nova-archive.git" />
+          </div>
+        </div>
+        <div className="flex flex-row gap-4 underline-offset-1">
+          <img
+            src={GitHubLogo}
+            alt="GitHub"
+            className="w-12 h-12 [.dark_&]:invert"
+          />
+          <div className="flex flex-col">
+            <div className="font-bold">Stella Nova Archive Database</div>
+            <HyperLink link="https://github.com/BB-69/stella-nova-archive-db.git" />
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "credits",
+    label: "Credits",
+    icon: <UsersRound />,
+    content: (
+      <div className="max-w-[80vw]">
+        This fan-made, non-commercial project is not affiliated with Yostar and
+        is only for informational and educational purposes.
+      </div>
+    ),
+  },
 ];
 
 const Sidebar = ({
@@ -12,6 +72,8 @@ const Sidebar = ({
   onToggleSidebar: () => void;
   collapsed: boolean;
 }) => {
+  const [activeModal, setActiveModal] = useState<string | null>(null);
+
   return (
     <aside
       aria-expanded={!collapsed}
@@ -25,30 +87,21 @@ const Sidebar = ({
     >
       <div
         className="flex items-center h-16 pb-3
-      border-b border-black/30 [.dark_&]:border-white/30"
+        border-b border-black/30 [.dark_&]:border-white/30"
       >
         <button
           onClick={onToggleSidebar}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           className="flex flex-row justify-top items-center
-          h-full w-full p-[6px_12px]
+          h-full w-full p-[6px_10px]
           rounded-md hover:bg-black/5 [.dark_&]:hover:bg-white/5"
         >
-          <svg
-            className="absolute"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            aria-hidden
-          >
-            <path
-              fill="currentColor"
-              d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z"
-            />
-          </svg>
+          <div className="absolute">
+            <Menu />
+          </div>
           <span
             className={`
-              font-bold ml-8 origin-left duration-200
+              font-bold ml-9 origin-left duration-200
               ${collapsed ? "opacity-0 scale-x-0" : "opacity-100 scale-x-100"}
             `}
           >
@@ -60,27 +113,37 @@ const Sidebar = ({
       <div className="flex flex-col justify-between h-full">
         <nav className="flex flex-col gap-2 mt-3" aria-label="Sidebar">
           {items.map((it) => (
-            <a
-              key={it.href}
-              // href={`#/${it.href}`}
+            <button
+              key={it.id}
               className="flex items-center p-[10px_10px] rounded-md
-          font-semibold text-[var(--t-c)] [.dark_&]:text-[var(--t-c-dark)]
-          hover:bg-blue-500/10 [.dark_&]:hover:bg-blue-300/10
-          hover:text-blue-600 [.dark_&]:hover:text-blue-400"
+              font-semibold text-[var(--t-c)] [.dark_&]:text-[var(--t-c-dark)]
+              hover:bg-blue-500/10 [.dark_&]:hover:bg-blue-300/10
+              hover:text-blue-600 [.dark_&]:hover:text-blue-400
+              whitespace-nowrap"
+              onClick={() => setActiveModal(it.id)}
             >
               <span className="absolute w-6 text-center">{it.icon}</span>
               <span
                 className={`
-                ml-8 origin-left duration-200
+                ml-9 origin-left duration-200
                 ${collapsed ? "opacity-0 scale-x-0" : "opacity-100 scale-x-100"}
               `}
               >
                 {it.label}
               </span>
-            </a>
+            </button>
           ))}
         </nav>
       </div>
+
+      {items.map((it) => (
+        <OverlayModal
+          onClose={() => setActiveModal(null)}
+          active={it.id === activeModal}
+          title={it.label}
+          children={it.content}
+        />
+      ))}
     </aside>
   );
 };
