@@ -138,6 +138,7 @@ const Sidebar = ({
 
       {items.map((it) => (
         <OverlayModal
+          key={it.id}
           onClose={() => setActiveModal(null)}
           active={it.id === activeModal}
           title={it.label}
