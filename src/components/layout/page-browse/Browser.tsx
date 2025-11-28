@@ -1,56 +1,99 @@
-import QMark from "@/assets/fallback/question-mark.svg";
+import { useEffect, useState } from "react";
+import { FetchFilesFromFolder } from "../../../scripts/database-loader";
+import QMark from "/assets/fallback/question-mark.svg";
 
-const items = [
-  {
-    id: "item1",
-    type: "image",
-    cat: "other",
-    sub_cat: null,
-    title: "Item 1",
-    desc: "Alienating",
-    src: "a/b",
-  },
-  {
-    id: "item2",
-    type: "image",
-    cat: "other",
-    sub_cat: null,
-    title: "Item 2",
-    desc: "Alienating",
-    src: "",
-  },
-  {
-    id: "item3",
-    type: "image",
-    cat: "other",
-    sub_cat: null,
-    title: "Item 3",
-    desc: "Alienating",
-    src: "",
-  },
-  {
-    id: "item4",
-    type: "image",
-    cat: "other",
-    sub_cat: null,
-    title: "Item 4",
-    desc: "Alienating",
-    src: "",
-  },
-];
+/* ---LOCAL_TEST--- */
+// const items = [
+//   {
+//     id: "test-item1",
+//     type: "image",
+//     cat: "other",
+//     sub_cat: null,
+//     title: "Test Item 1",
+//     desc: "Alienating",
+//     src: "a/b",
+//   },
+//   {
+//     id: "test-item2",
+//     type: "image",
+//     cat: "other",
+//     sub_cat: null,
+//     title: "Test Item 2",
+//     desc: "Alienating",
+//     src: "assets/nova-alphabet-table.jpg",
+//   },
+//   {
+//     id: "test-item3",
+//     type: "image",
+//     cat: "other",
+//     sub_cat: null,
+//     title: "Test Item 3",
+//     desc: "Alienating",
+//     src: "",
+//   },
+// ];
+
+const data = await FetchFilesFromFolder("data/", "json");
 
 const Browser = () => {
+  const [images, setImages] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    if (!data) return;
+
+    data.forEach(async (d) => {
+      if (d.item.source?.length > 0) {
+        const img = await FetchFilesFromFolder(d.item.source[0], "webp");
+        setImages((prev) => ({ ...prev, [d.item.id]: img[0].url }));
+      }
+    });
+  }, [data]);
+
   return (
     <div className="p-5 overflow-auto">
-      <h1 className="text-3xl font-bold">Browser</h1>
-      <p className="mt-2">This is the main browsing area...</p>
-
       <section
-        className="grid mt-4 gap-4 justify-items-center
+        className="grid gap-4 justify-items-start
         grid-cols-[repeat(auto-fit,minmax(220px,1fr))]"
       >
-        {items.map((it) => (
-          <article key={it.id} className="h-[220px]">
+        {data != null &&
+          data.map((d) => {
+            return (
+              <article key={d.item.id} className="h-[220px]">
+                <div
+                  className="flex flex-col bg-white [.dark_&]:bg-black p-4 h-full w-[220px]
+              rounded-xl shadow-lg shadow-black/20 [.dark_&]:shadow-white/20"
+                >
+                  <h3
+                    className="font-semibold text-lg
+                pb-1 border-b border-black/30 [.dark_&]:border-white/30"
+                  >
+                    {d.item.title || "< Untitled >"}
+                  </h3>
+                  <div
+                    className="mt-2 flex w-full h-[150px]
+                border-x-2 border-black/30 [.dark_&]:border-white/30 rounded-lg"
+                  >
+                    <img
+                      src={` ${images[d.item.id] || ""}`}
+                      onError={(e) => {
+                        const img = e.currentTarget;
+                        img.onerror = null;
+                        img.src = QMark;
+                        img.classList.add("[.dark_&]:invert");
+                      }}
+                      className="p-1 w-auto h-auto object-contain"
+                      alt={d.item.title}
+                    />
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+
+        {/* ---LOCAL_TEST--- */}
+
+        {/* {items.map((it) => (
+          <article key={"test-" + it.id} className="h-[220px]">
             <div
               className="flex flex-col bg-white [.dark_&]:bg-black p-4 h-full w-[220px]
               rounded-xl shadow-lg shadow-black/20 [.dark_&]:shadow-white/20"
@@ -61,19 +104,25 @@ const Browser = () => {
               >
                 {it.title}
               </h3>
-              <img
-                src={it.src}
-                onError={(e) => {
-                  const img = e.currentTarget;
-                  img.onerror = null;
-                  img.src = QMark;
-                  img.classList.add("opacity-20");
-                }}
-                className="p-2 mt-2 max-w-full max-h-[150px] object-contain"
-              />
+              <div
+                className="mt-2 flex w-full h-[150px]
+                border-x-2 border-black/30 [.dark_&]:border-white/30 rounded-lg"
+              >
+                <img
+                  src={` ${it.src}`}
+                  onError={(e) => {
+                    const img = e.currentTarget;
+                    img.onerror = null;
+                    img.src = QMark;
+                    img.classList.add("[.dark_&]:invert");
+                  }}
+                  className="p-1 w-auto h-auto object-contain"
+                  alt={it.title}
+                />
+              </div>
             </div>
           </article>
-        ))}
+        ))} */}
       </section>
     </div>
   );
