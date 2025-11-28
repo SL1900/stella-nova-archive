@@ -1,5 +1,5 @@
 import EntryCarousel from "../components/layout/page-home/EntryCarousel";
-import StellaSoraLogo from "../assets/stellasora-logo-white.webp";
+import StellaSoraLogo from "/assets/stellasora-logo-white.webp";
 
 function HomePage() {
   return (

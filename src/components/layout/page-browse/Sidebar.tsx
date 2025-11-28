@@ -1,7 +1,7 @@
 import { FileSpreadsheet, Link, Menu, UsersRound } from "lucide-react";
-import GitHubLogo from "@/assets/github.svg";
-import NovaTable from "@/assets/nova-alphabet-table.jpg";
-// import NovaTableWritten from "@/assets/nova-alphabet-written-table.png";
+import GitHubLogo from "/assets/github.svg";
+import NovaTable from "/assets/nova-alphabet-table.jpg";
+// import NovaTableWritten from "/assets/nova-alphabet-written-table.png";
 import { useState } from "react";
 import OverlayModal from "../../common/overlay-modal";
 import HyperLink from "../../common/hyperlink";
