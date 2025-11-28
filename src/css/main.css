@@ -8,7 +8,7 @@
   color-scheme: light dark;
   color: var(--t);
   transition-property: background, color;
-  transition-duration: .5s;
+  transition-duration: 0.5s;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -42,8 +42,8 @@
   /* text
   c: content
   */
-  --t: rgb(36,36,36);
-  --t-dark: rgb(240, 240, 240);;
+  --t: rgb(36, 36, 36);
+  --t-dark: rgb(240, 240, 240);
   --t-c: black;
   --t-c-dark: white;
 }
@@ -67,12 +67,12 @@ img {
 }
 
 @font-face {
-  font-family: 'NovaModern';
-  src: url('../assets/fonts/NovaModern.woff2') format('woff2');
+  font-family: "NovaModern";
+  src: url("/assets/fonts/NovaModern.woff2") format("woff2");
 }
 
 .novamodern {
-  font-family: 'NovaModern';
+  font-family: "NovaModern";
 }
 
 /*
