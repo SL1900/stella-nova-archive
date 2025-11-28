@@ -1,4 +1,4 @@
-// import StellaSoraLogo from "@/assets/stellasora-logo-white.webp";
+// import StellaSoraLogo from "/assets/stellasora-logo-white.webp";
 import { ThemeSwitcher } from "../../common/theme";
 
 const Header = () => {
