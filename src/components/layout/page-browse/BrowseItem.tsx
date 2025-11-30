@@ -26,8 +26,16 @@ const BrowseItem = ({ item, imgSrc }: { item: ItemData; imgSrc: string }) => {
           onError={(e) => {
             const img = e.currentTarget;
             img.onerror = null;
-            img.src = QMark;
-            img.classList.add("[.dark_&]:invert");
+            if (!img.src.includes(QMark)) {
+              img.src = QMark;
+              img.classList.add("[.dark_&]:invert");
+            }
+          }}
+          onLoad={(e) => {
+            const img = e.currentTarget;
+            if (!img.src.includes(QMark)) {
+              img.classList.remove("[.dark_&]:invert");
+            }
           }}
           className="p-1 w-auto h-auto object-contain"
           alt={item.title}
