@@ -15,15 +15,16 @@ const branch: string = "main";
 async function _TestRepositoryAccess(): Promise<void> {
   try {
     const rootUrl = `${baseUrl}/${owner}/${repo}/${branch}/fileIndex.json`;
-    console.log("Testing URL:", rootUrl);
+    console.log("Fetching Database:", rootUrl);
 
     const response = await fetch(rootUrl);
 
     console.log("Response status:", response.status);
 
     if (response.ok) {
-      const rootContents = await response.json();
-      console.log("Paths:", rootContents);
+      console.log("Good response.");
+      // const rootContents = await response.json();
+      // console.log("Paths:", rootContents);
     } else {
       const errorText = await response.text();
       console.log("Error response:", errorText);
