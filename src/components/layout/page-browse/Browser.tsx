@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FetchFilesFromFolder } from "../../../scripts/database-loader";
-import QMark from "/assets/fallback/question-mark.svg";
 import { isItemData } from "../../../scripts/structs/item-data";
+import BrowseItem from "./BrowseItem";
 
 /* ---LOCAL_TEST--- */
 // const items = [
@@ -66,33 +66,7 @@ const Browser = () => {
 
             return (
               <article key={`${idx}-${item.id}`} className="h-[220px]">
-                <div
-                  className="flex flex-col bg-white [.dark_&]:bg-black p-4 h-full w-[220px]
-              rounded-xl shadow-lg shadow-black/20 [.dark_&]:shadow-white/20"
-                >
-                  <h3
-                    className="font-semibold text-lg
-                pb-1 border-b border-black/30 [.dark_&]:border-white/30"
-                  >
-                    {item.title || "< Untitled >"}
-                  </h3>
-                  <div
-                    className="mt-2 flex w-full h-[150px]
-                border-x-2 border-black/30 [.dark_&]:border-white/30 rounded-lg"
-                  >
-                    <img
-                      src={` ${images[item.id] || ""}`}
-                      onError={(e) => {
-                        const img = e.currentTarget;
-                        img.onerror = null;
-                        img.src = QMark;
-                        img.classList.add("[.dark_&]:invert");
-                      }}
-                      className="p-1 w-auto h-auto object-contain"
-                      alt={item.title}
-                    />
-                  </div>
-                </div>
+                <BrowseItem item={item} imgSrc={images[item.id]} />
               </article>
             );
           })}
