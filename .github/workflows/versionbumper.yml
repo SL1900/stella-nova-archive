@@ -1,4 +1,4 @@
-name: Update minor version on user PR
+name: Update patch version on user PR
 
 on:
   pull_request:
@@ -19,8 +19,8 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Bump minor version
-        run: npx npm-version minor
+      - name: Bump patch version
+        run: npm version patch
 
       - name: Get new version
         id: version
@@ -32,15 +32,15 @@ jobs:
           git config user.email "actions@github.com"
           git checkout -b update-version || git checkout update-version
           git add package.json
-          git diff --quiet && echo "No changes to commit" || git commit -m "chore: bump minor version to ${{ env.VERSION }}"
+          git diff --quiet && echo "No changes to commit" || git commit -m "chore: bump patch version to ${{ env.VERSION }}"
           git push -u origin update-version --force
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: bump minor version to ${{ env.VERSION }}"
+          commit-message: "chore: bump patch version to ${{ env.VERSION }}"
           branch: update-version
-          title: "Bump minor version to ${{ env.VERSION }}"
-          body: "This PR bumps the minor version in package.json."
+          title: "Bump patch version to ${{ env.VERSION }}"
+          body: "This PR bumps the patch version in package.json."
           base: main
