@@ -1,8 +1,9 @@
 // import StellaSoraLogo from "/assets/stellasora-logo-white.webp";
 import { ThemeSwitcher } from "../../common/theme";
 import SearchBar from "../../common/search-bar";
+import { SlidersHorizontal } from "lucide-react";
 
-const Header = () => {
+const Header = ({ onToggleFilterbar }: { onToggleFilterbar: () => void }) => {
   return (
     <header
       className="flex flex-col h-[64px]
@@ -29,6 +30,20 @@ const Header = () => {
         </span>
 
         <div className="flex flex-row flex-1 min-w-0 max-w-[280px] gap-3">
+          <button
+            className="flex justify-center items-center
+            relative w-[40px] h-[40px] rounded-[8px] pt-0.5
+            bg-[var(--d2-c)] [.dark_&]:bg-[var(--d2-c-dark)]
+            border-1 border-black/20 [.dark_&]:border-white/20
+            cursor-pointer font-bold"
+            onClick={onToggleFilterbar}
+            style={{
+              cursor: "pointer",
+            }}
+          >
+            <SlidersHorizontal />
+          </button>
+
           <SearchBar />
 
           <div className="flex gap-2">
