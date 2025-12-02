@@ -3,7 +3,13 @@ import { ThemeSwitcher } from "../../common/theme";
 import SearchBar from "../../common/search-bar";
 import { SlidersHorizontal } from "lucide-react";
 
-const Header = ({ onToggleFilterbar }: { onToggleFilterbar: () => void }) => {
+const Header = ({
+  onToggleFilterbar,
+  collapsed,
+}: {
+  onToggleFilterbar: () => void;
+  collapsed: boolean;
+}) => {
   return (
     <header
       className="flex flex-col h-[64px]
@@ -31,11 +37,22 @@ const Header = ({ onToggleFilterbar }: { onToggleFilterbar: () => void }) => {
 
         <div className="flex flex-row flex-1 min-w-0 max-w-[280px] gap-3">
           <button
-            className="flex justify-center items-center
-            relative w-[40px] h-[40px] rounded-[8px] pt-0.5
-            bg-[var(--d2-c)] [.dark_&]:bg-[var(--d2-c-dark)]
-            border-1 border-black/20 [.dark_&]:border-white/20
-            cursor-pointer font-bold"
+            className={`flex justify-center items-center
+            relative w-[40px] h-[40px] rounded-md pt-0.5
+            ${
+              collapsed
+                ? `
+              bg-[var(--d2-c)] [.dark_&]:bg-[var(--d2-c-dark)]
+              hover:bg-black/10 [.dark_&]:hover:bg-white/10
+            `
+                : `
+              border-1
+              bg-blue-500/10 [.dark_&]:bg-blue-300/10
+              hover:bg-blue-500/20 [.dark_&]:hover:bg-blue-300/20
+              text-blue-600 [.dark_&]:text-blue-400
+            `
+            }
+            cursor-pointer font-bold`}
             onClick={onToggleFilterbar}
             style={{
               cursor: "pointer",
