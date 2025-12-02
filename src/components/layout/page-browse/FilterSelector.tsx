@@ -5,7 +5,11 @@ const FilterSelector = ({ collapsed }: { collapsed: boolean }) => {
         collapsed ? "h-[0]" : "h-[64px]"
       }`}
     >
-      <div className="h-full bg-white [.dark_&]:bg-black"></div>
+      <div
+        className="h-full bg-white [.dark_&]:bg-black
+        shadow-md shadow-black/10 [.dark_&]:shadow-white/10
+        inset-shadow-sm inset-shadow-black/30 [.dark_&]:inset-shadow-white/30"
+      ></div>
     </div>
   );
 };

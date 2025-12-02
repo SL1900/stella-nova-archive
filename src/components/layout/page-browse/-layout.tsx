@@ -15,7 +15,10 @@ const BrowseLayout = () => {
       [.dark_&]:from-[var(--bg-a2-dark)] [.dark_&]:to-black"
       data-collapsed={sidebarCollapsed ? "true" : "false"}
     >
-      <Header onToggleFilterbar={() => setFilterbarCollapsed((s) => !s)} />
+      <Header
+        onToggleFilterbar={() => setFilterbarCollapsed((s) => !s)}
+        collapsed={filterbarCollapsed}
+      />
 
       <div
         className={
