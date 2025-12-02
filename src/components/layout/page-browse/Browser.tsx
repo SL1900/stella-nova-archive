@@ -38,7 +38,7 @@ import { useDebugValue } from "../../../hooks/useDebugValue";
 
 const data = await FetchFilesFromFolder("data/", "json");
 
-const Browser = ({ collapsed }: { collapsed: boolean }) => {
+const Browser = () => {
   const [images, setImages] = useState<{ [key: string]: string }>({});
   const { searchQuery } = useSearchContext();
 
@@ -85,10 +85,7 @@ const Browser = ({ collapsed }: { collapsed: boolean }) => {
   }
 
   return (
-    <div
-      className={`border-1 p-5 overflow-auto
-      ${collapsed ? "w-[calc(100vw-72px)]" : "w-[calc(100vw-260px)]"}`}
-    >
+    <div className={`p-5 overflow-auto w-full`}>
       {items != undefined && items?.length > 0 ? (
         <section
           className="grid gap-4 justify-items-start
