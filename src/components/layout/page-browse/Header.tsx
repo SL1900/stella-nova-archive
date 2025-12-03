@@ -18,7 +18,10 @@ const Header = ({
       bg-white [.dark_&]:bg-black overflow-hidden
       gap-[6px] p-[10px_18px] sticky z-20"
     >
-      <div className="flex items-center justify-between gap-4 h-full">
+      <div
+        className="flex items-center justify-between
+        max-[540px]:justify-end gap-4 h-full"
+      >
         {/* <div className="max-[720px]:hidden">
           <img
             src={StellaSoraLogo}
@@ -30,7 +33,7 @@ const Header = ({
 
         <span
           className="overflow-hidden novamodern pt-2
-        font-semibold text-xl whitespace-nowrap"
+          font-semibold text-xl whitespace-nowrap max-[540px]:hidden"
         >
           Stella Nova Archive
         </span>
@@ -42,7 +45,6 @@ const Header = ({
             ${
               collapsed
                 ? `
-              bg-[var(--d2-c)] [.dark_&]:bg-[var(--d2-c-dark)]
               hover:bg-black/10 [.dark_&]:hover:bg-white/10
             `
                 : `
