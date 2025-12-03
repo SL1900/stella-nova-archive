@@ -20,13 +20,28 @@ const tags = [
   },
 ];
 
-export const filterTags = {
-  illustration: ["background", "character", "disc"],
-  live2d: ["background", "character"],
-  battle_stage: ["ascension"],
-  ui: ["in-game", "encyclopedia"],
-  other: [],
-};
+export const filterTags = [
+  {
+    main: "illustration",
+    sub: ["background", "character", "disc"],
+  },
+  {
+    main: "live2d",
+    sub: ["background", "character"],
+  },
+  {
+    main: "battle_stage",
+    sub: ["ascension"],
+  },
+  {
+    main: "ui",
+    sub: ["in-game", "encyclopedia"],
+  },
+  {
+    main: "other",
+    sub: [],
+  },
+];
 
 function getTagLevel(tag: string): string {
   for (const tl of tags) {
