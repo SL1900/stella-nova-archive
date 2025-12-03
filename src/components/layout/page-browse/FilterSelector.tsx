@@ -38,7 +38,7 @@ const FilterSelector = ({ collapsed }: { collapsed: boolean }) => {
             className="h-full pb-2 px-2 grid grid-cols-[repeat(auto-fit,minmax(110px,1fr))]
             justify-center items-top overflow-x-hidden"
           >
-            {Object.entries(filterTags).map(([key, subTags]) => (
+            {Object.entries(filterTags).map(([key, tags]) => (
               <div key={key} className="p-2 flex flex-col min-w-max">
                 <button
                   className={`flex px-2 py-1 items-center
@@ -62,8 +62,8 @@ const FilterSelector = ({ collapsed }: { collapsed: boolean }) => {
                   {checkedTags[key] && <Check size={16} />}
                 </button>
                 <div className="flex flex-col gap-2 mt-1 px-1">
-                  {subTags.length > 0 &&
-                    subTags.map((subTag) => (
+                  {tags.sub.length > 0 &&
+                    tags.sub.map((subTag) => (
                       <button
                         key={subTag}
                         className="px-3 py-1 bg-[var(--btn-bg)] [.dark_&]:bg-[var(--btn-bg-dark)]
