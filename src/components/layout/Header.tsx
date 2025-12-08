@@ -1,16 +1,18 @@
 // import StellaSoraLogo from "/assets/stellasora-logo-white.webp";
-import { ThemeSwitcher } from "../../common/theme";
-import SearchBar from "../../common/search-bar";
+import { ThemeSwitcher } from "../common/theme";
+import SearchBar from "../common/search-bar";
 import { SlidersHorizontal } from "lucide-react";
-import SortSelector from "./SortSelector";
-import ButtonToggle from "../../common/button-toggle";
+import SortSelector from "./page-browse/SortSelector";
+import ButtonToggle from "../common/button-toggle";
 
 const Header = ({
   onToggleFilterbar,
   collapsed,
+  isBrowsing,
 }: {
   onToggleFilterbar: () => void;
   collapsed: boolean;
+  isBrowsing: boolean;
 }) => {
   return (
     <header
@@ -41,11 +43,15 @@ const Header = ({
         </span>
 
         <div className="flex flex-row flex-1 min-w-0 max-w-[320px] gap-1">
-          <SortSelector />
+          {isBrowsing == true && (
+            <>
+              <SortSelector />
 
-          <ButtonToggle toggle={collapsed} onToggle={onToggleFilterbar}>
-            <SlidersHorizontal />
-          </ButtonToggle>
+              <ButtonToggle toggle={collapsed} onToggle={onToggleFilterbar}>
+                <SlidersHorizontal />
+              </ButtonToggle>
+            </>
+          )}
 
           <SearchBar />
 
