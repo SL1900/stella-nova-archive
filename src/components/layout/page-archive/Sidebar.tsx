@@ -95,9 +95,8 @@ const Sidebar = ({
           {overlayItems.map((it) => {
             let index = 1;
             return (
-              <div className="flex flex-col w-full h-full">
+              <div key={it.id} className="flex flex-col w-full h-full">
                 <button
-                  key={it.id}
                   className={`flex items-center p-[10px_8.5px] rounded-md
                   font-semibold text-[var(--t-c)] [.dark_&]:text-[var(--t-c-dark)]
                   hover:bg-blue-500/10 [.dark_&]:hover:bg-blue-300/10
