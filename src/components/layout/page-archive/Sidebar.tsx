@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronUp, Menu, Type } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ItemOverlay } from "../../../scripts/structs/item-data";
+import TextBox from "../../common/text-box";
 
 /* ---LOCAL_TEST--- */
 const overlayItems: ItemOverlay[] = [
@@ -132,14 +133,23 @@ const Sidebar = ({
 
                 <div
                   className={`bg-[#ebebeb77] [.dark_&]:bg-[#2a2a2a77]
-                    rounded-[8px] origin-top duration-200
+                    rounded-[8px] origin-top duration-200 overflow-auto
                     ${
                       !sidebarCollapsed && !foldedTl[it.id]
-                        ? "opacity-100 scale-y-100 h-auto p-[8px]"
-                        : "opacity-0 scale-y-0 h-0 p-0"
+                        ? "opacity-100 scale-y-100 max-h-60 p-[8px_12px] mb-3"
+                        : "opacity-0 scale-y-0 max-h-0 p-0 mb-0"
                     }`}
                 >
-                  Text
+                  <div className="grid grid-cols-[60px_auto] auto-rows-[minmax(30px,auto)] gap-1">
+                    <TextBox text={"Text"} />
+                    <TextBox text={it.text} />
+                    {it.notes != null && (
+                      <>
+                        <TextBox text={"Notes"} />
+                        <TextBox text={it.notes} />
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             );
