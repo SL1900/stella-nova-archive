@@ -15,9 +15,6 @@ const Content = () => {
       let x = e.clientX - rect.left;
       let y = e.clientY - rect.top;
 
-      x = Math.max(0, Math.min(x, rect.width));
-      y = Math.max(0, Math.min(y, rect.height));
-
       setCursor({
         x: Math.floor(x),
         y: Math.floor(y),
@@ -32,7 +29,7 @@ const Content = () => {
     <div className="flex min-w-full min-h-full justify-center items-center p-8">
       <div
         className="max-w-full max-h-full gap-6 overflow-hidden grid
-        grid-cols-[16px_minmax(0,1fr)_16px]
+        grid-cols-[64px_minmax(0,1fr)_64px]
         grid-rows-[16px_minmax(0,1fr)_16px]"
       >
         {/* Top */}
