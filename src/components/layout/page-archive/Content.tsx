@@ -29,18 +29,19 @@ const Content = () => {
     <div className="flex min-w-full min-h-full justify-center items-center p-8">
       <div
         className="max-w-full max-h-full gap-6 overflow-hidden grid
-        grid-cols-[64px_minmax(0,1fr)_64px]
-        grid-rows-[16px_minmax(0,1fr)_16px]"
+        grid-cols-[16px_minmax(0,1fr)]
+        grid-rows-[16px_minmax(0,1fr)]"
       >
-        {/* Top */}
-        <div></div>
-        <Ruler orientation="horizontal" cursorPos={cursor.x} label={cursor.x} />
+        {/* tl */}
         <div></div>
 
-        {/* Left */}
+        {/* tr */}
+        <Ruler orientation="horizontal" cursorPos={cursor.x} label={cursor.x} />
+
+        {/* bl */}
         <Ruler orientation="vertical" cursorPos={cursor.y} label={cursor.y} />
 
-        {/* Center */}
+        {/* br */}
         <div
           ref={containerRef}
           className="bg-white border border-gray-300
@@ -52,14 +53,6 @@ const Content = () => {
             className="w-full h-full object-contain"
           />
         </div>
-
-        {/* Right */}
-        <Ruler orientation="vertical" cursorPos={cursor.y} />
-
-        {/* Bottom */}
-        <div></div>
-        <Ruler orientation="horizontal" cursorPos={cursor.x} />
-        <div></div>
       </div>
     </div>
   );

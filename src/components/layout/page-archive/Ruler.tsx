@@ -7,40 +7,42 @@ const Ruler = ({
   label?: number;
 }) => {
   const isHorizontal = orientation === "horizontal";
+  const tickCount = 200; // adjust if needed
+  const tickSpacing = 20;
 
   return (
     <div
       className={`
         relative bg-gray-200 border-gray-400 select-none text-[10px] overflow-hidden
-        ${isHorizontal ? "border-b" : "border-r"}
+        ${isHorizontal ? "border-b rounded-t-md" : "border-r rounded-l-md"}
       `}
-      style={{
-        backgroundImage: isHorizontal
-          ? `repeating-linear-gradient(to right, #000 0 1px, transparent 1px 10px)`
-          : `repeating-linear-gradient(to bottom, #000 0 1px, transparent 1px 10px)`,
-      }}
     >
-      {/* --- Repeating ticks --- */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: isHorizontal
-            ? `
-              repeating-linear-gradient(
-                to right,
-                #000 0 1px, transparent 1px 10px,
-                #000 10px 2px, transparent 2px 50px
-              )
-            `
-            : `
-              repeating-linear-gradient(
-                to bottom,
-                #000 0 1px, transparent 1px 10px,
-                #000 10px 2px, transparent 2px 50px
-              )
-            `,
-        }}
-      />
+      {/* --- Ticks --- */}
+      {Array.from({ length: tickCount }).map((_, i) => {
+        const isEven = i % 2 === 0;
+
+        return (
+          <div
+            key={i}
+            className="absolute bg-black"
+            style={
+              isHorizontal
+                ? {
+                    left: i * tickSpacing,
+                    top: 0,
+                    width: 1,
+                    height: isEven ? "70%" : "40%",
+                  }
+                : {
+                    top: i * tickSpacing,
+                    left: 0,
+                    height: 1,
+                    width: isEven ? "70%" : "40%",
+                  }
+            }
+          />
+        );
+      })}
 
       {/* --- Cursor marker --- */}
       <div
