@@ -134,8 +134,8 @@ const Sidebar = ({
                 </button>
 
                 <div
-                  className={`bg-[#ebebeb77] [.dark_&]:bg-[#2a2a2a77]
-                    rounded-[8px] origin-top duration-200 overflow-auto
+                  className={`bg-[#ababab77] [.dark_&]:bg-[#2a2a2a77]
+                    rounded-[8px] origin-top duration-200 overflow-hidden
                     ${
                       !sidebarCollapsed && !foldedTl[it.id]
                         ? "opacity-100 scale-y-100 max-h-60 p-[8px_12px] mb-3"
