@@ -3,6 +3,7 @@ import QMark from "/assets/fallback/question-mark.svg";
 import Ruler from "./Ruler";
 import { useDebugValue } from "../../../hooks/useDebugValue";
 import type { ItemData } from "../../../scripts/structs/item-data";
+import Overlay from "./Overlay";
 
 const Content = ({
   item,
@@ -23,10 +24,12 @@ const Content = ({
       let x = e.clientX - rect.left;
       let y = e.clientY - rect.top;
 
-      setCursor({
-        x: Math.floor(x),
-        y: Math.floor(y),
-      });
+      requestAnimationFrame(() =>
+        setCursor({
+          x: Math.floor(x),
+          y: Math.floor(y),
+        })
+      );
     };
 
     window.addEventListener("mousemove", handlePointerMove);
@@ -63,17 +66,46 @@ const Content = ({
   }, [item]);
 
   useLayoutEffect(() => {
+    const container = containerRef.current;
     const img = imgRef.current;
-    if (!img) return;
+    if (!container || !img) return;
 
-    const rect = img.getBoundingClientRect();
-    setDisplay({
-      x: rect.x,
-      y: rect.y,
-      w: rect.width,
-      h: rect.height,
+    const updateDisplay = () => {
+      const rect = img.getBoundingClientRect();
+      setDisplay({
+        x: rect.x,
+        y: rect.y,
+        w: rect.width,
+        h: rect.height,
+      });
+    };
+
+    updateDisplay();
+
+    const observer = new ResizeObserver(() => {
+      updateDisplay();
     });
+
+    observer.observe(container);
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
+
+  const imageOffset = useMemo(() => {
+    if (!containerRef.current || !imgRef.current) {
+      return { x: 0, y: 0 };
+    }
+
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const imageRect = imgRef.current.getBoundingClientRect();
+
+    return {
+      x: imageRect.left - containerRect.left,
+      y: imageRect.top - containerRect.top,
+    };
+  }, [display]);
 
   return (
     <div
@@ -104,7 +136,7 @@ const Content = ({
       {/* br */}
       <div
         ref={containerRef}
-        className="flex justify-center items-center max-w-full max-h-full"
+        className="relative flex justify-center items-center w-full h-full"
       >
         <img
           ref={imgRef}
@@ -125,6 +157,8 @@ const Content = ({
 
             requestAnimationFrame(() => {
               const rect = imgRef.current!.getBoundingClientRect();
+              if (!rect) return;
+
               setDisplay({
                 x: rect.x,
                 y: rect.y,
@@ -134,8 +168,15 @@ const Content = ({
             });
           }}
           className="max-w-full max-h-full
-            rounded-md border-4 border-black/30 [.dark_]:border-white/30"
+          rounded-md outline-4 outline-black/30 [.dark_]:outline-white/30"
           alt={item != null && imgSrc ? item.title : "< null >"}
+        />
+
+        <Overlay
+          item={item}
+          resolution={resolution}
+          display={display}
+          offset={imageOffset}
         />
       </div>
     </div>

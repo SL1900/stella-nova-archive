@@ -97,11 +97,12 @@ export default function DebugBox({ title, children }: Props) {
 
   return (
     <motion.div
-      className="floating-box"
+      className="floating-box overflow-auto"
       style={{
         left: position.x,
         top: position.y,
-        width: open ? "180px" : "108px",
+        width: open ? "200px" : "108px",
+        maxHeight: "90vh",
       }}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
