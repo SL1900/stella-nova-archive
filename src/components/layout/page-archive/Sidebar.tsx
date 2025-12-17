@@ -1,7 +1,8 @@
 import { ChevronDown, ChevronUp, Menu, Type } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ItemData } from "../../../scripts/structs/item-data";
 import TextBox from "../../common/text-box";
+import { useOverlayContext } from "./OverlayContext";
 
 /* ---LOCAL_TEST--- */
 // const overlayItems: ItemOverlay[] = [
@@ -37,6 +38,8 @@ const Sidebar = ({
   item: ItemData | null;
 }) => {
   const [foldedTl, setFoldedTl] = useState<{ [key: string]: boolean }>({});
+  const { overlayMetas, setOverlayMeta, setOverlayTransform } =
+    useOverlayContext();
 
   useEffect(() => {
     if (!item) return;
@@ -52,6 +55,51 @@ const Sidebar = ({
   function toggleFoldedTl(key: string) {
     setFoldedTl((prev) => ({ ...prev, [key]: !foldedTl[key] }));
   }
+
+  const overlayInfoRefs = useRef<
+    Record<
+      string,
+      { head: HTMLDivElement | null; child: HTMLDivElement | null }
+    >
+  >({});
+
+  useEffect(() => {
+    const overlayHeader = overlayInfoRefs.current;
+    if (!overlayHeader) return;
+
+    const updateOverlayTransform = () => {
+      Object.entries(item?.overlays ?? []).forEach(([_, { id }]) => {
+        if (!overlayHeader[id] || !overlayHeader[id].head) return;
+
+        const rect = overlayHeader[id].head.getBoundingClientRect();
+
+        setOverlayTransform(false, id, {
+          p: { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 },
+          t: rect.top,
+          b: rect.bottom,
+          l: rect.left,
+          r: rect.right,
+        });
+      });
+    };
+
+    const observer = new ResizeObserver(() => {
+      updateOverlayTransform();
+    });
+
+    Object.values(overlayHeader).forEach(({ head, child }) => {
+      if (head) observer.observe(head);
+      if (child) observer.observe(child);
+    });
+
+    updateOverlayTransform();
+
+    window.addEventListener("resize", updateOverlayTransform);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateOverlayTransform);
+    };
+  }, [item]);
 
   return (
     <aside
@@ -97,20 +145,41 @@ const Sidebar = ({
         <nav className="flex flex-col gap-2 mt-3" aria-label="Sidebar">
           {item?.overlays.map((it) => {
             let index = 1;
+            const om = overlayMetas[it.id];
             return (
               <div key={it.id} className="flex flex-col w-full h-full">
-                <button
+                <div
+                  ref={(el) => {
+                    if (!overlayInfoRefs.current[it.id])
+                      overlayInfoRefs.current[it.id] = {
+                        head: null,
+                        child: null,
+                      };
+                    overlayInfoRefs.current[it.id].head = el;
+                  }}
                   className={`flex items-center p-[10px_8.5px] rounded-md
                   font-semibold text-[var(--t-c)] [.dark_&]:text-[var(--t-c-dark)]
-                  hover:bg-blue-500/10 [.dark_&]:hover:bg-blue-300/10
-                  hover:text-blue-600 [.dark_&]:hover:text-blue-400
-                  border-1 whitespace-nowrap
-                ${
-                  !sidebarCollapsed && !foldedTl[it.id]
-                    ? `border-black-500/50 hover:border-blue-500`
-                    : "border-black/0"
-                }
-                `}
+                  border-1 whitespace-nowrap`}
+                  style={{
+                    backgroundColor:
+                      om && om.color && om.hover
+                        ? `${om.color}19`
+                        : "#00000000",
+                    borderColor:
+                      (!sidebarCollapsed && !foldedTl[it.id]) ||
+                      (om && om.hover)
+                        ? om && om.color
+                          ? om.color
+                          : "black-500/50"
+                        : "#00000000",
+                    color: om && om.color && om.hover ? om.color : "inherit",
+                  }}
+                  onPointerEnter={() =>
+                    setOverlayMeta({ [it.id]: { hover: true } })
+                  }
+                  onPointerLeave={() =>
+                    setOverlayMeta({ [it.id]: { hover: false } })
+                  }
                   onClick={() => !sidebarCollapsed && toggleFoldedTl(it.id)}
                 >
                   <span className="absolute w-6 text-center text-xl">
@@ -131,9 +200,17 @@ const Sidebar = ({
                     </span>
                     {it.id}
                   </span>
-                </button>
+                </div>
 
                 <div
+                  ref={(el) => {
+                    if (!overlayInfoRefs.current[it.id])
+                      overlayInfoRefs.current[it.id] = {
+                        head: null,
+                        child: null,
+                      };
+                    overlayInfoRefs.current[it.id].child = el;
+                  }}
                   className={`bg-[#ababab77] [.dark_&]:bg-[#2a2a2a77]
                     rounded-[8px] origin-top duration-200 overflow-hidden
                     ${
