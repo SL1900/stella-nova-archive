@@ -1,22 +1,25 @@
-import { FileSpreadsheet, Link, Menu, UsersRound } from "lucide-react";
+import { CircleQuestionMark, FileSpreadsheet, Link, Menu } from "lucide-react";
 import GitHubLogo from "/assets/github.svg";
+import DiscordLogo from "/assets/discord.svg";
 import NovaTable from "/assets/nova-alphabet-table.jpg";
-// import NovaTableWritten from "/assets/nova-alphabet-written-table.png";
+import NovaTableWritten from "/assets/nova-alphabet-written-table.png";
 import { useState } from "react";
 import OverlayModal from "../../common/overlay-modal";
 import HyperLink from "../../common/hyperlink";
+import ScrollableImgGroup from "../../common/scrollable-imggroup";
 
 const items = [
   {
-    id: "nova-table",
-    label: "Nova Table",
+    id: "resources",
+    label: "Resources",
     icon: <FileSpreadsheet />,
     content: (
-      <div className="max-w-[80vh] h-[50vh] flex justify-center">
-        <img
-          src={NovaTable}
-          alt="Nova Alphabet Table"
-          className="max-w-full max-h-full object-contain"
+      <div className="flex w-[80vw] h-[50vh]">
+        <ScrollableImgGroup
+          srcs={[
+            { src: NovaTable, alt: "Nova Alphabet Table" },
+            { src: NovaTableWritten, alt: "Nova Alphabet Table Written" },
+          ]}
         />
       </div>
     ),
@@ -26,7 +29,7 @@ const items = [
     label: "Links",
     icon: <Link />,
     content: (
-      <div className="flex flex-col gap-5 max-h-[50vh] overflow-y-auto">
+      <div className="flex flex-col gap-5 max-w-[80vw] max-h-[50vh] overflow-y-auto">
         <div className="flex flex-row gap-4 underline-offset-1">
           <img
             src={GitHubLogo}
@@ -49,17 +52,37 @@ const items = [
             <HyperLink link="https://github.com/BB-69/stella-nova-archive-db.git" />
           </div>
         </div>
+        <div className="flex flex-row gap-4 underline-offset-1">
+          <img src={DiscordLogo} alt="Discord" className="w-12 h-12" />
+          <div className="flex flex-col">
+            <div className="font-bold">Stella Nova Archive Discord Server</div>
+            <HyperLink link="https://discord.gg/WbVEx5r8a8" />
+          </div>
+        </div>
       </div>
     ),
   },
   {
-    id: "credits",
-    label: "Credits",
-    icon: <UsersRound />,
+    id: "about",
+    label: "About",
+    icon: <CircleQuestionMark />,
     content: (
-      <div className="max-w-[80vw]">
-        This fan-made, non-commercial project is not affiliated with Yostar and
-        is only for informational and educational purposes.
+      <div className="w-[600px] max-w-[80vw] flex flex-col gap-2">
+        <span>
+          <span className="font-bold">Stella Nova Archive</span> is a website
+          that acts like an archive that contains inscription and translation of{" "}
+          <span className="font-bold">'Nova'</span> language from hit game{" "}
+          <span className="font-bold">'Stella Sora'</span>.
+        </span>
+        <div className="border-b-5 border-dotted my-4 opacity-40"></div>
+        <span>
+          This fan-made, non-commercial project is not affiliated with Yostar
+          and is only for informational and educational purposes.
+        </span>
+        <span>
+          Yostar Games owns the original assets to the game, all credits go to
+          its rightful owner.
+        </span>
       </div>
     ),
   },

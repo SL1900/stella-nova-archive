@@ -146,7 +146,7 @@ const Content = ({
             }
 
             requestAnimationFrame(() => {
-              const rect = imgRef.current!.getBoundingClientRect();
+              const rect = imgRef.current?.getBoundingClientRect();
               if (!rect) return;
 
               setDisplay({
