@@ -25,6 +25,8 @@ export type OverlayTransformType = {
 };
 
 interface OverlayContextType {
+  overlayActive: boolean;
+  toggleOverlayActive: () => void;
   overlayMetas: OverlayMetaType;
   setOverlayMeta: (meta: OverlayMetaType) => void;
   overlayTransforms: OverlayTransformType;
@@ -39,6 +41,7 @@ interface OverlayContextType {
 export const OverlayContext = createContext<OverlayContextType | null>(null);
 
 export function OverlayProvider({ children }: { children: ReactNode }) {
+  const [overlayActive, setOverlayActive] = useState<boolean>(true);
   const [overlayMetas, setOverlayMetas] = useState<{
     [key: string]: { color: string; hover: boolean };
   }>({});
@@ -54,8 +57,11 @@ export function OverlayProvider({ children }: { children: ReactNode }) {
     // useDebugValue("overlayTransforms", overlayTransforms, "/archive");
   }
 
+  const toggleOverlayActive = () => {
+    setOverlayActive(!overlayActive);
+  };
+
   const resetOverlayData = () => {
-    console.log("reset");
     setOverlayMetas({});
     setOverlayTransforms({});
   };
@@ -91,6 +97,8 @@ export function OverlayProvider({ children }: { children: ReactNode }) {
   return (
     <OverlayContext.Provider
       value={{
+        overlayActive,
+        toggleOverlayActive,
         overlayMetas,
         setOverlayMeta,
         overlayTransforms,
