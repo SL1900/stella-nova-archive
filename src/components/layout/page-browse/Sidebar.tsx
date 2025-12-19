@@ -67,7 +67,7 @@ const items = [
     label: "About",
     icon: <CircleQuestionMark />,
     content: (
-      <div className="w-[600px] max-w-[80vw] flex flex-col gap-2">
+      <div className="flex flex-col gap-2 w-[600px] max-w-[80vw] max-h-[50vh] overflow-y-auto">
         <span>
           <span className="font-bold">Stella Nova Archive</span> is a website
           that acts like an archive that contains inscription and translation of{" "}
@@ -100,7 +100,7 @@ const Sidebar = ({
   return (
     <aside
       aria-expanded={!collapsed}
-      className={`overflow-hidden flex flex-col p-3.5
+      className={`overflow-hidden flex flex-col p-3.5 fixed md:static h-full
       border-r border-black/20 [.dark_&]:border-white/20
       shadow-md shadow-black/20 [.dark_&]:shadow-white/20
       bg-gradient-to-b from-[#f3fdff] to-white

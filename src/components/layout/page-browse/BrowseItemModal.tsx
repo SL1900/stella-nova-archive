@@ -46,9 +46,10 @@ const BrowseItemModal = ({
     }
 
     // cap bounds
-    if (left < 0) left = 0;
-    if (left + modalRect.width > viewportWidth)
-      left = viewportWidth - modalRect.width;
+    const capPadX = 16;
+    if (left < 0 + capPadX) left = capPadX;
+    if (left + modalRect.width > viewportWidth - capPadX)
+      left = viewportWidth - modalRect.width - capPadX;
 
     const viewportHeight = window.innerHeight;
     if (top + modalRect.height > viewportHeight)
