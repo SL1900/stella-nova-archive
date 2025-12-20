@@ -1,9 +1,13 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ItemData } from "../../../scripts/structs/item-data";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const InfoHeader = ({ item }: { item: ItemData | null }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [edges, setEdges] = useState<{ atLeft: boolean; atRight: boolean }>({
+    atLeft: false,
+    atRight: false,
+  });
 
   const scroll = (direction: "left" | "right") => {
     containerRef.current?.scrollBy({
@@ -11,6 +15,26 @@ const InfoHeader = ({ item }: { item: ItemData | null }) => {
       behavior: "smooth",
     });
   };
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const handleScroll = () => {
+      const atLeft = el.scrollLeft === 0;
+      const atRight = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
+      console.log(
+        `${el.scrollLeft} + ${el.clientWidth} >= ${el.scrollWidth} - 1`
+      );
+
+      setEdges({ atLeft: atLeft, atRight: atRight });
+    };
+
+    handleScroll();
+
+    el.addEventListener("scroll", handleScroll);
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, [containerRef.current?.scrollWidth]);
 
   return (
     <div
@@ -22,14 +46,18 @@ const InfoHeader = ({ item }: { item: ItemData | null }) => {
     >
       <div className="flex flex-row overflow-hidden items-center w-full h-full gap-4">
         <button
-          className="group-unselectable flex justify-center items-center
+          className={`group-unselectable flex justify-center items-center
             min-w-[40px] min-h-[40px] rounded-full
             bg-white [.dark_&]:bg-black
-            hover:bg-[#225588] [.dark_&]:hover:bg-white
-            hover:text-white [.dark_&]:hover:text-[#225588]
+            ${
+              !edges.atLeft
+                ? `hover:bg-[#225588] [.dark_&]:hover:bg-white
+                hover:text-white [.dark_&]:hover:text-[#225588]`
+                : "opacity-40"
+            }
             shadow-md shadow-black/20 [.dark_&]:shadow-white/20
-            transition-background duration-100"
-          onClick={() => scroll("left")}
+            transition-background duration-100`}
+          onClick={() => (!edges.atLeft ? scroll("left") : {})}
         >
           <ChevronLeft width={28} height={28} />
         </button>
@@ -58,14 +86,18 @@ const InfoHeader = ({ item }: { item: ItemData | null }) => {
           </div>
         </div>
         <button
-          className="group-unselectable flex justify-center items-center
+          className={`group-unselectable flex justify-center items-center
             min-w-[40px] min-h-[40px] rounded-full
             bg-white [.dark_&]:bg-black
-            hover:bg-[#225588] [.dark_&]:hover:bg-white
-            hover:text-white [.dark_&]:hover:text-[#225588]
+            ${
+              !edges.atRight
+                ? `hover:bg-[#225588] [.dark_&]:hover:bg-white
+                hover:text-white [.dark_&]:hover:text-[#225588]`
+                : "opacity-40"
+            }
             shadow-md shadow-black/20 [.dark_&]:shadow-white/20
-            transition-background duration-100"
-          onClick={() => scroll("right")}
+            transition-background duration-100`}
+          onClick={() => (!edges.atRight ? scroll("right") : {})}
         >
           <ChevronRight width={28} height={28} />
         </button>
