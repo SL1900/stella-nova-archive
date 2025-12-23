@@ -37,3 +37,37 @@ export function isItemData(x: any): x is ItemData {
     Array.isArray(x.source)
   );
 }
+
+export function defaultItemOverlay(id?: string): ItemOverlay {
+  return {
+    id: id ?? "newOverlay",
+    frame: null,
+    bounds: { x: 0, y: 0, w: 0, h: 0 },
+    bounds_end: null,
+    rotation: 0,
+    shear: 0,
+    text: "null",
+    notes: null,
+  };
+}
+
+export function defaultItemData(id?: string): ItemData {
+  return {
+    id: id ?? "newItem",
+    type: "image",
+    category: "< null >",
+    sub_category: null,
+    title: "< null >",
+    description: "< null >",
+    source: [],
+
+    meta: {
+      width: 0,
+      height: 0,
+      frames: null,
+      version: "0.0.0",
+    },
+
+    overlays: [],
+  };
+}

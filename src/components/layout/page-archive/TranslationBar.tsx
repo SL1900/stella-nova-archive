@@ -1,6 +1,15 @@
-import { ChevronDown, ChevronUp, Menu, Type } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import type { ItemData } from "../../../scripts/structs/item-data";
+import { ChevronDown, ChevronUp, Menu, Minus, Plus, Type } from "lucide-react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
+import {
+  defaultItemOverlay,
+  type ItemData,
+} from "../../../scripts/structs/item-data";
 import TextBox from "../../common/text-box";
 import { useOverlayContext } from "./OverlayContext";
 
@@ -32,10 +41,14 @@ const TranslationBar = ({
   onToggleTlBar,
   tlBarCollapsed,
   item,
+  setItem,
+  editing,
 }: {
   onToggleTlBar: () => void;
   tlBarCollapsed: boolean;
   item: ItemData | null;
+  setItem: Dispatch<SetStateAction<ItemData | null>>;
+  editing: boolean;
 }) => {
   const [foldedTl, setFoldedTl] = useState<{ [key: string]: boolean }>({});
   const { overlayMetas, setOverlayMeta, setOverlayTransform } =
@@ -180,7 +193,7 @@ const TranslationBar = ({
                       };
                     overlayInfoRefs.current[it.id].head = el;
                   }}
-                  className={`group-unselectable relative flex items-center p-[10px_8.8px] rounded-md
+                  className={`group group-unselectable relative flex items-center p-[10px_8.8px] rounded-md
                   font-semibold text-[var(--t-c)] [.dark_&]:text-[var(--t-c-dark)]
                   border-1 whitespace-nowrap overflow-hidden`}
                   style={{
@@ -219,6 +232,38 @@ const TranslationBar = ({
                   >
                     {it.id}
                   </span>
+                  {editing && (
+                    <span
+                      className={`absolute right-9 ${
+                        tlBarCollapsed ? "md:scale-0" : "md:scale-100"
+                      }
+                        opacity-0 group-hover:opacity-100
+                        rounded-md pointer-events-auto border-1
+                        border-black [.dark_&]:border-white
+                        text-black [.dark_&]:text-white
+                        hover:bg-black/20 [.dark_&]:hover:bg-white/20
+                      `}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setItem((prev) => {
+                          if (!prev) return prev;
+
+                          const overlays = prev.overlays
+                            .map((o) => {
+                              return o.id == it.id ? null : o;
+                            })
+                            .filter((o) => o != null);
+
+                          return {
+                            ...prev,
+                            overlays: overlays,
+                          };
+                        });
+                      }}
+                    >
+                      <Minus />
+                    </span>
+                  )}
                   <span
                     className={`absolute right-2 duration-200 ${
                       tlBarCollapsed
@@ -260,9 +305,10 @@ const TranslationBar = ({
                 </div>
               </div>
             );
-          }) ?? (
-            <div
-              className={`
+          }) ??
+            (!editing && (
+              <div
+                className={`
                 flex flex-col w-full pt-2 gap-4 duration-200
                 text-center whitespace-nowrap
                 ${
@@ -271,11 +317,67 @@ const TranslationBar = ({
                     : "md:opacity-80 md:scale-x-100"
                 }
               `}
+              >
+                <span>! unknown session !</span>
+                <span>Please select an archive to view</span>
+              </div>
+            ))}
+
+          {/* --- EDIT ONLY --- */}
+
+          <div
+            className="group-unselectable p-[4px] w-full h-auto
+            flex justify-center items-center"
+          >
+            <span
+              className={`
+                group flex justify-center items-center
+                max-w-full h-full rounded-full border-1
+                border-black/50 [.dark_&]:border-white/50
+                hover:border-white [.dark_&]:hover:border-black
+                hover:bg-[var(--bg-a1)] [.dark_&]:hover:bg-white
+                hover:text-white [.dark_&]:hover:text-[var(--bg-a1-dark)]
+                pl-2 pr-3 text-sm font-bold whitespace-nowrap
+                transition duration-100
+                ${
+                  tlBarCollapsed ? "scale-0 opacity-0" : "scale-100 opacity-100"
+                }
+              `}
+              onClick={() =>
+                setItem((prev) => {
+                  if (!prev) return prev;
+
+                  const getNewId = (baseId: string) => {
+                    let id = baseId;
+                    let n = 0;
+
+                    while (prev.overlays.some((o) => o.id === id)) {
+                      n++;
+                      id = `${baseId} (${n})`;
+                    }
+
+                    return id;
+                  };
+
+                  return {
+                    ...prev,
+                    overlays: [
+                      ...prev.overlays,
+                      defaultItemOverlay(getNewId("newOverlay")),
+                    ],
+                  };
+                })
+              }
             >
-              <span>! unknown session !</span>
-              <span>Please select an archive to view</span>
-            </div>
-          )}
+              <span
+                className="flex flex-row items-center
+                h-full gap-2 opacity-70 group-hover:opacity-100"
+              >
+                <Plus />
+                <span className="pb-[1.7px]">new overlay</span>
+              </span>
+            </span>
+          </div>
         </nav>
       </div>
     </aside>
