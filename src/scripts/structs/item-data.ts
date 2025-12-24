@@ -30,6 +30,20 @@ export interface ItemData {
   overlays: ItemOverlay[];
 }
 
+export interface ItemDataFraction {
+  id?: string;
+  type?: string;
+  category?: string;
+  sub_category?: string[] | null;
+  title?: string;
+  description?: string;
+  source?: string[];
+
+  meta?: ItemMeta;
+
+  overlays?: ItemOverlay[];
+}
+
 export function isItemData(x: any): x is ItemData {
   return (
     typeof x === "object" &&

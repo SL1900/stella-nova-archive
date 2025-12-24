@@ -52,7 +52,7 @@ const ArchiveLayout = () => {
     resetOverlayData();
     loadData();
     if (urlId == null && urlEdit)
-      navigate(`/archive?edit=true&id=${"newOverlay"}`);
+      navigate(`/archive?edit=true&id=${"newItem"}`);
     if (urlEdit) setItem(defaultItemData());
   }, [urlId]);
 

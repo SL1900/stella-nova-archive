@@ -1,16 +1,29 @@
-import { useEffect, useState, type ChangeEvent } from "react";
+import {
+  useEffect,
+  useState,
+  type ChangeEvent,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 
 const TextBox = ({
   text,
   edit,
+  setText,
 }: {
   text: string | null;
   edit?: {
     placeholder: string;
     num?: { isInt: boolean; range?: { s: number; e: number } };
   };
+  setText?: Dispatch<SetStateAction<string>>;
 }) => {
   const [query, setQuery] = useState("");
+
+  const updateQuery = (s: string) => {
+    setQuery(s);
+    setText?.(s);
+  };
 
   function checkNum(s: string, isInt: boolean): boolean {
     const intRegex = /^[0-9\b\-]+$/;
@@ -26,7 +39,7 @@ const TextBox = ({
     const { value } = e.target;
 
     if (value === "" || (edit?.num ? checkNum(value, edit.num.isInt) : true)) {
-      setQuery(value);
+      updateQuery(value);
     }
   };
 
@@ -56,11 +69,11 @@ const TextBox = ({
 
   const handleInputBlur = () => {
     if (query === "") {
-      setQuery(edit?.placeholder ?? "");
+      updateQuery(edit?.placeholder ?? "");
       return;
     }
 
-    setQuery(edit?.num ? finalNumber(query) : query);
+    updateQuery(edit?.num ? finalNumber(query) : query);
   };
 
   useEffect(() => {
