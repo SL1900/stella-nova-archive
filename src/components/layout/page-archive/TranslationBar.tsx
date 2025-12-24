@@ -9,10 +9,13 @@ import {
 import {
   defaultItemOverlay,
   type ItemData,
+  type ItemDataFraction,
 } from "../../../scripts/structs/item-data";
 import TextBox from "../../common/text-box";
 import { useOverlayContext } from "./OverlayContext";
 import OverlayProperty from "./OverlayProperty";
+import Dropdown from "../../common/dropdown";
+import { filterTags, tags } from "../../../scripts/structs/tag-data";
 
 /* ---LOCAL_TEST--- */
 // const overlayItems: ItemOverlay[] = [
@@ -123,6 +126,17 @@ const TranslationBar = ({
     };
   }, [item]);
 
+  const applyItem = (newI: ItemDataFraction) => {
+    setItem((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        ...newI,
+      };
+    });
+  };
+
   return (
     <aside
       aria-expanded={!tlBarCollapsed}
@@ -181,28 +195,53 @@ const TranslationBar = ({
           aria-label="Translation bar"
         >
           {editing && (
-            <div className="group-selectable grid grid-cols-[80px_auto] auto-rows-[minmax(30px,auto)] gap-1 px-3 py-2">
+            <div className="group-selectable grid grid-cols-[1fr_1fr] auto-rows-[minmax(30px,auto)] gap-1 px-3 py-2">
               <span className="text-sm flex items-center">Id</span>
               <TextBox
                 text={item?.id ?? "< null >"}
                 edit={{ placeholder: "newItem" }}
+                setText={(s) => applyItem({ id: s.toString() })}
               />
               <span className="text-sm flex items-center">Type</span>
-              <TextBox text={item?.type ?? "image"} />
+              <Dropdown
+                options={["image"]}
+                setSelect={(s) => applyItem({ type: s.toString() })}
+              />
               <span className="text-sm flex items-center">Category</span>
-              <TextBox
-                text={item?.category ?? "< null >"}
-                edit={{ placeholder: "< null >" }}
+              <Dropdown
+                options={(() => {
+                  let options: string[] = [];
+                  tags.forEach((t) => {
+                    if (t.level === "primary") options = t.tag;
+                  });
+                  return options;
+                })()}
+                select="other"
+                setSelect={(s) => applyItem({ category: s.toString() })}
+              />
+              <span className="text-sm flex items-center">Sub-Category</span>
+              <Dropdown
+                options={(() => {
+                  let options = ["none"];
+                  filterTags.forEach((t) => {
+                    if (t.main === item?.category && t.sub.length > 0)
+                      options = t.sub;
+                  });
+                  return options;
+                })()}
+                setSelect={(s) => applyItem({ sub_category: [s.toString()] })}
               />
               <span className="text-sm flex items-center">Title</span>
               <TextBox
                 text={item?.title ?? "< null >"}
                 edit={{ placeholder: "< null >" }}
+                setText={(s) => applyItem({ title: s.toString() })}
               />
               <span className="text-sm flex items-center">Description</span>
               <TextBox
                 text={item?.description ?? "< null >"}
                 edit={{ placeholder: "< null >" }}
+                setText={(s) => applyItem({ description: s.toString() })}
               />
             </div>
           )}
