@@ -7,6 +7,7 @@ export default function Collapsible({
   icon: icon = { open: "+", close: "-" },
   fontSize,
   children,
+  lock,
 }: {
   title: string;
   subtitle?: string;
@@ -16,6 +17,7 @@ export default function Collapsible({
     | { open: JSX.Element; close: JSX.Element };
   fontSize?: number;
   children: React.ReactNode;
+  lock?: { setCollapsed: boolean };
 }) {
   const storageKey = useMemo(
     () => `collapsible-${subtitle}-${title}`,
@@ -46,21 +48,23 @@ export default function Collapsible({
       >
         <span style={{ fontSize: fontSize }}>{title}</span>
 
-        <button
-          className="w-[20px] h-[20px] rounded-[3px] cursor-pointer
-          flex justify-center items-center
-          text-[var(--t-c)] [.dark_&]:text-[var(--t-c-dark)] text-[14px]/[20px]
-          hover:bg-[var(--bg-hover)] [.dark_&]:hover:bg-[var(--bg-hover-dark)]"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="toggle section"
-        >
-          <span className={`${typeof icon.close == "string" && "pb-[3px]"}`}>
-            {open ? icon.close : icon.open}
-          </span>
-        </button>
+        {lock == null && (
+          <button
+            className="w-[20px] h-[20px] rounded-[3px] cursor-pointer
+            flex justify-center items-center
+            text-[var(--t-c)] [.dark_&]:text-[var(--t-c-dark)] text-[14px]/[20px]
+            hover:bg-[var(--bg-hover)] [.dark_&]:hover:bg-[var(--bg-hover-dark)]"
+            onClick={() => setOpen((v) => !v)}
+            aria-label="toggle section"
+          >
+            <span className={`${typeof icon.close == "string" && "pb-[3px]"}`}>
+              {open ? icon.close : icon.open}
+            </span>
+          </button>
+        )}
       </div>
 
-      {open && (
+      {(open || (lock != null && !lock.setCollapsed)) && (
         <div
           className="bg-[#ebebeb77] [.dark_&]:bg-[#2a2a2a77]
           rounded-b-[8px] mb-[4px] p-[8px]"
