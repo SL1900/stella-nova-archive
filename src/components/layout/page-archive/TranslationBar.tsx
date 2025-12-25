@@ -1,4 +1,12 @@
-import { ChevronDown, ChevronUp, Menu, Minus, Plus, Type } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  FileCog,
+  Menu,
+  Minus,
+  Plus,
+  Type,
+} from "lucide-react";
 import {
   useEffect,
   useRef,
@@ -17,6 +25,9 @@ import OverlayProperty from "./OverlayProperty";
 import Dropdown from "../../common/dropdown";
 import { filterTags, tags } from "../../../scripts/structs/tag-data";
 import Collapsible from "../../common/collapsible";
+import { useIsMd } from "../../../hooks/useIsMd";
+import ButtonToggle from "../../common/button-toggle";
+import OverlayModal from "../../common/overlay-modal";
 
 /* ---LOCAL_TEST--- */
 // const overlayItems: ItemOverlay[] = [
@@ -42,6 +53,173 @@ import Collapsible from "../../common/collapsible";
 //   },
 // ];
 
+const ImageData = ({
+  item,
+  applyItem,
+}: {
+  item: ItemData | null;
+  applyItem: (newI: ItemDataFraction) => void;
+}) => {
+  return (
+    <>
+      <Collapsible
+        title={"Image Data"}
+        icon={{
+          open: <ChevronDown height={16} />,
+          close: <ChevronUp height={16} />,
+        }}
+        fontSize={14}
+        lock={{ setCollapsed: false }}
+      >
+        <div className="group-selectable grid grid-cols-[1fr_1fr] auto-rows-[minmax(30px,auto)] gap-1 px-1">
+          <span className="text-sm flex items-center">Id</span>
+          <TextBox
+            text={item?.id ?? "< null >"}
+            edit={{ placeholder: "newItem" }}
+            setText={(s) => applyItem({ id: s.toString() })}
+          />
+          <span className="text-sm flex items-center">Type</span>
+          <Dropdown
+            options={["image"]}
+            setSelect={(s) => applyItem({ type: s.toString() })}
+          />
+          <span className="text-sm flex items-center">Category</span>
+          <Dropdown
+            options={(() => {
+              let options: string[] = [];
+              tags.forEach((t) => {
+                if (t.level === "primary") options = t.tag;
+              });
+              return options;
+            })()}
+            select="other"
+            setSelect={(s) => applyItem({ category: s.toString() })}
+          />
+          <span className="text-sm flex items-center">Sub-Category</span>
+          <Dropdown
+            options={(() => {
+              let options = ["none"];
+              filterTags.forEach((t) => {
+                if (t.main === item?.category && t.sub.length > 0)
+                  options = t.sub;
+              });
+              return options;
+            })()}
+            setSelect={(s) => applyItem({ sub_category: [s.toString()] })}
+          />
+          <span className="text-sm flex items-center">Title</span>
+          <TextBox
+            text={item?.title ?? "< null >"}
+            edit={{ placeholder: "< null >" }}
+            setText={(s) => applyItem({ title: s.toString() })}
+          />
+          <span className="text-sm flex items-center">Description</span>
+          <TextBox
+            text={item?.description ?? "< null >"}
+            edit={{ placeholder: "< null >" }}
+            setText={(s) => applyItem({ description: s.toString() })}
+          />
+        </div>
+      </Collapsible>
+
+      <Collapsible
+        title={"Metadata"}
+        icon={{
+          open: <ChevronDown height={16} />,
+          close: <ChevronUp height={16} />,
+        }}
+        fontSize={14}
+        lock={{ setCollapsed: false }}
+      >
+        <div className="group-selectable grid grid-cols-[1fr_1fr] auto-rows-[minmax(30px,auto)] gap-1 px-1">
+          <span className="text-sm flex items-center">Width</span>
+          <TextBox
+            text={item?.meta.width.toString() ?? "< null >"}
+            edit={{
+              placeholder: "0",
+              check: (s) => {
+                const regex = /^[0-9\b]+$/;
+                return regex.test(s);
+              },
+              checkFinal: (s) => {
+                return Math.max(
+                  0,
+                  Math.min(Number.MAX_SAFE_INTEGER, Number(s))
+                ).toString();
+              },
+            }}
+            setText={(s) => {
+              if (!item) return;
+              applyItem({
+                meta: {
+                  ...item.meta,
+                  width: Number(s.toString()),
+                },
+              });
+            }}
+          />
+          <span className="text-sm flex items-center">Height</span>
+          <TextBox
+            text={item?.meta.height.toString() ?? "< null >"}
+            edit={{
+              placeholder: "0",
+              check: (s) => {
+                const regex = /^[0-9\b]+$/;
+                return regex.test(s);
+              },
+              checkFinal: (s) => {
+                return Math.max(
+                  0,
+                  Math.min(Number.MAX_SAFE_INTEGER, Number(s))
+                ).toString();
+              },
+            }}
+            setText={(s) => {
+              if (!item) return;
+              applyItem({
+                meta: {
+                  ...item.meta,
+                  height: Number(s.toString()),
+                },
+              });
+            }}
+          />
+          <span className="text-sm flex items-center">Version</span>
+          <TextBox
+            text={item?.meta.width.toString() ?? "< null >"}
+            edit={{
+              placeholder: "0.0.0",
+              check: (s) => {
+                const regex = /^[0-9\b\.]+$/;
+                const arr = s.split(".");
+                return regex.test(s) && arr.length < 4 && s.indexOf("..") == -1;
+              },
+              checkFinal: (s) => {
+                if (s.charAt(0) == ".") s = "0" + s;
+                if (s.charAt(s.length - 1) == ".") s = s + "0";
+
+                if (s.split(".").length < 2) s = s + ".0";
+                if (s.split(".").length < 3) s = s + ".0";
+
+                return s;
+              },
+            }}
+            setText={(s) => {
+              if (!item) return;
+              applyItem({
+                meta: {
+                  ...item.meta,
+                  version: s.toString(),
+                },
+              });
+            }}
+          />
+        </div>
+      </Collapsible>
+    </>
+  );
+};
+
 const TranslationBar = ({
   onToggleTlBar,
   tlBarCollapsed,
@@ -56,6 +234,7 @@ const TranslationBar = ({
   editing: boolean;
 }) => {
   const [foldedTl, setFoldedTl] = useState<{ [key: string]: boolean }>({});
+  const [foldedImgData, setFoldedImgData] = useState(true);
   const { overlayMetas, setOverlayMeta, setOverlayTransform } =
     useOverlayContext();
 
@@ -139,435 +318,318 @@ const TranslationBar = ({
   };
 
   return (
-    <aside
-      aria-expanded={!tlBarCollapsed}
-      className={`group-selectable overflow-hidden flex flex-col p-3.5 w-full h-full
-      border-r border-black/20 [.dark_&]:border-white/20
-      shadow-md shadow-black/20 [.dark_&]:shadow-white/20
-      bg-gradient-to-b from-[#f3fdff] to-white
-      [.dark_&]:from-[#0b1220] [.dark_&]:to-black
-      md:transition-[width] md:duration-200 z-10
-      ${tlBarCollapsed ? "md:w-[72px]" : "md:w-[260px]"}`}
-    >
-      <div
-        className="group-unselectable flex items-center min-h-16 pb-3 min-w-full
-        border-b border-black/30 [.dark_&]:border-white/30"
+    <>
+      <aside
+        aria-expanded={!tlBarCollapsed}
+        className={`group-selectable overflow-hidden flex flex-col p-3.5 w-full h-full
+        border-r border-black/20 [.dark_&]:border-white/20
+        shadow-md shadow-black/20 [.dark_&]:shadow-white/20
+        bg-gradient-to-b from-[#f3fdff] to-white
+        [.dark_&]:from-[#0b1220] [.dark_&]:to-black
+        md:transition-[width] md:duration-200 z-10
+        ${tlBarCollapsed ? "md:w-[72px]" : "md:w-[260px]"}`}
       >
-        <button
-          onClick={onToggleTlBar}
-          aria-label={
-            tlBarCollapsed
-              ? "Expand translation bar"
-              : "Collapse translation bar"
-          }
-          className="flex flex-row justify-top items-center
-          h-full w-full p-[6px_10px]
-          rounded-md hover:bg-black/5 [.dark_&]:hover:bg-white/5"
+        <div
+          className="group-unselectable flex items-center min-h-16 pb-3 min-w-full
+          border-b border-black/30 [.dark_&]:border-white/30"
         >
-          <div className="absolute">
-            <Menu />
-          </div>
-          <span
-            className={`
-              font-bold ml-9 origin-left md:duration-200
-              ${
-                tlBarCollapsed
-                  ? "md:opacity-0 md:scale-x-0"
-                  : "md:opacity-100 md:scale-x-100"
-              }
-            `}
+          <button
+            onClick={onToggleTlBar}
+            aria-label={
+              tlBarCollapsed
+                ? "Expand translation bar"
+                : "Collapse translation bar"
+            }
+            className="flex flex-row justify-top items-center
+            h-full w-full p-[6px_10px]
+            rounded-md hover:bg-black/5 [.dark_&]:hover:bg-white/5"
           >
-            Translation
-          </span>
-        </button>
-      </div>
+            <div className="absolute">
+              <Menu />
+            </div>
+            <span
+              className={`
+                  font-bold ml-9 origin-left md:duration-200
+                ${
+                  tlBarCollapsed
+                    ? "md:opacity-0 md:scale-x-0"
+                    : "md:opacity-100 md:scale-x-100"
+                }
+              `}
+            >
+              Translation
+            </span>
+          </button>
 
-      <div
-        className={`flex flex-col justify-between
-        origin-top md:h-full pb-14 md:pb-0
-        md:scale-y-100 md:opacity-100 md:max-h-full
-        transition-[height] md:transition-none duration-200 md:duration-0
-        ${tlBarCollapsed ? "scale-y-0 h-0" : "scale-y-100 h-full"}`}
-      >
-        <nav
-          className="md:flex md:flex-col grid md:grid-cols-none
-          grid-cols-[repeat(auto-fit,minmax(240px,1fr))] max-[240px]:grid-cols-none
-          gap-2 mt-3 md:mb-14 px-2 md:px-0 pb-12 overflow-x-hidden overflow-y-auto"
-          aria-label="Translation bar"
-        >
-          {/* ---=== EDIT ===--- */}
-
-          {editing && (
-            <>
-              <Collapsible
-                title={"Image Data"}
-                icon={{
-                  open: <ChevronDown height={16} />,
-                  close: <ChevronUp height={16} />,
-                }}
-                fontSize={14}
+          {useIsMd() && (
+            <div
+              className="min-w-[50px] h-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ButtonToggle
+                toggle={foldedImgData}
+                onToggle={() => setFoldedImgData(!foldedImgData)}
+                fullSize={true}
               >
-                <div className="group-selectable grid grid-cols-[1fr_1fr] auto-rows-[minmax(30px,auto)] gap-1 px-1">
-                  <span className="text-sm flex items-center">Id</span>
-                  <TextBox
-                    text={item?.id ?? "< null >"}
-                    edit={{ placeholder: "newItem" }}
-                    setText={(s) => applyItem({ id: s.toString() })}
-                  />
-                  <span className="text-sm flex items-center">Type</span>
-                  <Dropdown
-                    options={["image"]}
-                    setSelect={(s) => applyItem({ type: s.toString() })}
-                  />
-                  <span className="text-sm flex items-center">Category</span>
-                  <Dropdown
-                    options={(() => {
-                      let options: string[] = [];
-                      tags.forEach((t) => {
-                        if (t.level === "primary") options = t.tag;
-                      });
-                      return options;
-                    })()}
-                    select="other"
-                    setSelect={(s) => applyItem({ category: s.toString() })}
-                  />
-                  <span className="text-sm flex items-center">
-                    Sub-Category
-                  </span>
-                  <Dropdown
-                    options={(() => {
-                      let options = ["none"];
-                      filterTags.forEach((t) => {
-                        if (t.main === item?.category && t.sub.length > 0)
-                          options = t.sub;
-                      });
-                      return options;
-                    })()}
-                    setSelect={(s) =>
-                      applyItem({ sub_category: [s.toString()] })
-                    }
-                  />
-                  <span className="text-sm flex items-center">Title</span>
-                  <TextBox
-                    text={item?.title ?? "< null >"}
-                    edit={{ placeholder: "< null >" }}
-                    setText={(s) => applyItem({ title: s.toString() })}
-                  />
-                  <span className="text-sm flex items-center">Description</span>
-                  <TextBox
-                    text={item?.description ?? "< null >"}
-                    edit={{ placeholder: "< null >" }}
-                    setText={(s) => applyItem({ description: s.toString() })}
-                  />
-                </div>
-              </Collapsible>
-
-              <Collapsible
-                title={"Metadata"}
-                icon={{
-                  open: <ChevronDown height={16} />,
-                  close: <ChevronUp height={16} />,
-                }}
-                fontSize={14}
-              >
-                <div className="group-selectable grid grid-cols-[1fr_1fr] auto-rows-[minmax(30px,auto)] gap-1 px-1">
-                  <span className="text-sm flex items-center">Width</span>
-                  <TextBox
-                    text={item?.meta.width.toString() ?? "< null >"}
-                    edit={{
-                      placeholder: "0",
-                      check: (s) => {
-                        const regex = /^[0-9\b]+$/;
-                        return regex.test(s);
-                      },
-                      checkFinal: (s) => {
-                        return Math.max(
-                          0,
-                          Math.min(Number.MAX_SAFE_INTEGER, Number(s))
-                        ).toString();
-                      },
-                    }}
-                    setText={(s) => {
-                      if (!item) return;
-                      applyItem({
-                        meta: {
-                          ...item.meta,
-                          width: Number(s.toString()),
-                        },
-                      });
-                    }}
-                  />
-                  <span className="text-sm flex items-center">Height</span>
-                  <TextBox
-                    text={item?.meta.height.toString() ?? "< null >"}
-                    edit={{
-                      placeholder: "0",
-                      check: (s) => {
-                        const regex = /^[0-9\b]+$/;
-                        return regex.test(s);
-                      },
-                      checkFinal: (s) => {
-                        return Math.max(
-                          0,
-                          Math.min(Number.MAX_SAFE_INTEGER, Number(s))
-                        ).toString();
-                      },
-                    }}
-                    setText={(s) => {
-                      if (!item) return;
-                      applyItem({
-                        meta: {
-                          ...item.meta,
-                          height: Number(s.toString()),
-                        },
-                      });
-                    }}
-                  />
-                  <span className="text-sm flex items-center">Version</span>
-                  <TextBox
-                    text={item?.meta.width.toString() ?? "< null >"}
-                    edit={{
-                      placeholder: "0.0.0",
-                      check: (s) => {
-                        const regex = /^[0-9\b\.]+$/;
-                        const arr = s.split(".");
-                        return (
-                          regex.test(s) &&
-                          arr.length < 4 &&
-                          s.indexOf("..") == -1
-                        );
-                      },
-                      checkFinal: (s) => {
-                        if (s.charAt(0) == ".") s = "0" + s;
-                        if (s.charAt(s.length - 1) == ".") s = s + "0";
-
-                        if (s.split(".").length < 2) s = s + ".0";
-                        if (s.split(".").length < 3) s = s + ".0";
-
-                        return s;
-                      },
-                    }}
-                    setText={(s) => {
-                      if (!item) return;
-                      applyItem({
-                        meta: {
-                          ...item.meta,
-                          version: s.toString(),
-                        },
-                      });
-                    }}
-                  />
-                </div>
-              </Collapsible>
-            </>
+                <FileCog />
+              </ButtonToggle>
+            </div>
           )}
+        </div>
 
-          {/* ---=== VIEW ===--- */}
+        <div
+          className={`flex flex-col justify-between
+          origin-top md:h-full pb-14 md:pb-0
+          md:scale-y-100 md:opacity-100 md:max-h-full
+          transition-[height] md:transition-none duration-200 md:duration-0
+          ${tlBarCollapsed ? "scale-y-0 h-0" : "scale-y-100 h-full"}`}
+        >
+          <nav
+            className="md:flex md:flex-col grid md:grid-cols-none
+            grid-cols-[repeat(auto-fit,minmax(240px,1fr))] max-[240px]:grid-cols-none
+            gap-2 mt-3 md:mb-14 px-2 md:px-0 pb-12 overflow-x-hidden overflow-y-auto"
+            aria-label="Translation bar"
+          >
+            {/* ---=== EDIT ===--- */}
 
-          {item?.overlays.map((it) => {
-            let index = 1;
-            const om = overlayMetas[it.id];
-            return (
-              <div key={it.id} className="flex flex-col w-full h-full">
-                <div
-                  ref={(el) => {
-                    if (!overlayInfoRefs.current[it.id])
-                      overlayInfoRefs.current[it.id] = {
-                        head: null,
-                        child: null,
-                      };
-                    overlayInfoRefs.current[it.id].head = el;
-                  }}
-                  className={`group group-unselectable relative flex items-center p-[10px_8.8px] rounded-md
-                  font-semibold text-[var(--t-c)] [.dark_&]:text-[var(--t-c-dark)]
-                  border-1 whitespace-nowrap overflow-hidden`}
-                  style={{
-                    backgroundColor:
-                      om && om.color && om.hover
-                        ? `${om.color}19`
-                        : "#00000000",
-                    borderColor:
-                      (!tlBarCollapsed && !foldedTl[it.id]) || (om && om.hover)
-                        ? om && om.color
-                          ? om.color
-                          : "black-500/50"
-                        : "#00000000",
-                    color: om && om.color && om.hover ? om.color : "inherit",
-                  }}
-                  onPointerEnter={() =>
-                    setOverlayMeta({ [it.id]: { hover: true } })
-                  }
-                  onPointerLeave={() =>
-                    setOverlayMeta({ [it.id]: { hover: false } })
-                  }
-                  onClick={() => !tlBarCollapsed && toggleFoldedTl(it.id)}
-                >
-                  <span className="absolute w-6 text-center text-xl">
-                    {it.id == "title" ? <Type /> : index++}
-                  </span>
-                  <span
-                    className={`
-                    ml-9 origin-left duration-200
-                    ${
-                      tlBarCollapsed
-                        ? "md:opacity-0 md:scale-x-0"
-                        : "md:opacity-100 md:scale-x-100"
+            {editing && !useIsMd() && (
+              <div
+                className={`duration-200 origin-top md:origin-top-right
+                ${
+                  tlBarCollapsed
+                    ? "scale-y-0 md:scale-0 opacity-0 max-h-0"
+                    : "scale-y-100 md:scale-100 opacity-100 max-h-full"
+                }
+              `}
+              >
+                <ImageData item={item} applyItem={applyItem} />
+              </div>
+            )}
+
+            {/* ---=== VIEW ===--- */}
+
+            {item?.overlays.map((it) => {
+              let index = 1;
+              const om = overlayMetas[it.id];
+              return (
+                <div key={it.id} className="flex flex-col w-full h-full">
+                  <div
+                    ref={(el) => {
+                      if (!overlayInfoRefs.current[it.id])
+                        overlayInfoRefs.current[it.id] = {
+                          head: null,
+                          child: null,
+                        };
+                      overlayInfoRefs.current[it.id].head = el;
+                    }}
+                    className={`group group-unselectable relative flex items-center p-[10px_8.8px] rounded-md
+                    font-semibold text-[var(--t-c)] [.dark_&]:text-[var(--t-c-dark)]
+                    border-1 whitespace-nowrap overflow-hidden`}
+                    style={{
+                      backgroundColor:
+                        om && om.color && om.hover
+                          ? `${om.color}19`
+                          : "#00000000",
+                      borderColor:
+                        (!tlBarCollapsed && !foldedTl[it.id]) ||
+                        (om && om.hover)
+                          ? om && om.color
+                            ? om.color
+                            : "black-500/50"
+                          : "#00000000",
+                      color: om && om.color && om.hover ? om.color : "inherit",
+                    }}
+                    onPointerEnter={() =>
+                      setOverlayMeta({ [it.id]: { hover: true } })
                     }
-                  `}
+                    onPointerLeave={() =>
+                      setOverlayMeta({ [it.id]: { hover: false } })
+                    }
+                    onClick={() => !tlBarCollapsed && toggleFoldedTl(it.id)}
                   >
-                    {it.id}
-                  </span>
-                  {editing && (
-                    <span
-                      className={`absolute right-9 ${
-                        tlBarCollapsed ? "md:scale-0" : "md:scale-100"
-                      }
-                        opacity-0 group-hover:opacity-100
-                        rounded-md pointer-events-auto border-1
-                        border-black [.dark_&]:border-white
-                        text-black [.dark_&]:text-white
-                        hover:bg-black/20 [.dark_&]:hover:bg-white/20
-                      `}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setItem((prev) => {
-                          if (!prev) return prev;
-
-                          const overlays = prev.overlays
-                            .map((o) => {
-                              return o.id == it.id ? null : o;
-                            })
-                            .filter((o) => o != null);
-
-                          return {
-                            ...prev,
-                            overlays: overlays,
-                          };
-                        });
-                      }}
-                    >
-                      <Minus />
+                    <span className="absolute w-6 text-center text-xl">
+                      {it.id == "title" ? <Type /> : index++}
                     </span>
-                  )}
-                  <span
-                    className={`absolute right-2 duration-200 ${
-                      tlBarCollapsed
-                        ? "md:scale-0 md:opacity-0"
-                        : "md:scale-100 md:opacity-100"
-                    }`}
-                  >
-                    {foldedTl[it.id] ? <ChevronDown /> : <ChevronUp />}
-                  </span>
-                </div>
+                    <span
+                      className={`
+                        ml-9 origin-left duration-200
+                        ${
+                          tlBarCollapsed
+                            ? "md:opacity-0 md:scale-x-0"
+                            : "md:opacity-100 md:scale-x-100"
+                        }
+                      `}
+                    >
+                      {it.id}
+                    </span>
+                    {editing && (
+                      <span
+                        className={`absolute right-9 ${
+                          tlBarCollapsed ? "md:scale-0" : "md:scale-100"
+                        }
+                          opacity-0 group-hover:opacity-100
+                          rounded-md pointer-events-auto border-1
+                          border-black [.dark_&]:border-white
+                          text-black [.dark_&]:text-white
+                          hover:bg-black/20 [.dark_&]:hover:bg-white/20
+                        `}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setItem((prev) => {
+                            if (!prev) return prev;
 
-                <div
-                  ref={(el) => {
-                    if (!overlayInfoRefs.current[it.id])
-                      overlayInfoRefs.current[it.id] = {
-                        head: null,
-                        child: null,
-                      };
-                    overlayInfoRefs.current[it.id].child = el;
-                  }}
-                  className={`bg-[#ababab77] [.dark_&]:bg-[#2a2a2a77]
+                            const overlays = prev.overlays
+                              .map((o) => {
+                                return o.id == it.id ? null : o;
+                              })
+                              .filter((o) => o != null);
+
+                            return {
+                              ...prev,
+                              overlays: overlays,
+                            };
+                          });
+                        }}
+                      >
+                        <Minus />
+                      </span>
+                    )}
+                    <span
+                      className={`absolute right-2 duration-200 ${
+                        tlBarCollapsed
+                          ? "md:scale-0 md:opacity-0"
+                          : "md:scale-100 md:opacity-100"
+                      }`}
+                    >
+                      {foldedTl[it.id] ? <ChevronDown /> : <ChevronUp />}
+                    </span>
+                  </div>
+
+                  <div
+                    ref={(el) => {
+                      if (!overlayInfoRefs.current[it.id])
+                        overlayInfoRefs.current[it.id] = {
+                          head: null,
+                          child: null,
+                        };
+                      overlayInfoRefs.current[it.id].child = el;
+                    }}
+                    className={`bg-[#ababab77] [.dark_&]:bg-[#2a2a2a77]
                     rounded-[8px] origin-top duration-200 overflow-hidden
                     ${
                       !tlBarCollapsed && !foldedTl[it.id]
                         ? "opacity-100 scale-y-100 max-h-60 p-[8px_12px] mb-3"
                         : "opacity-0 scale-y-0 max-h-0 p-0 mb-0"
                     }`}
-                >
-                  <OverlayProperty
-                    meta={item.meta}
-                    itemOverlay={it}
-                    editing={editing}
-                    setOverlay={(o) => {
-                      applyItem({
-                        overlays: item.overlays.map((overlay) =>
-                          overlay.id === it.id ? o : overlay
-                        ),
-                      });
-                    }}
-                  />
+                  >
+                    <OverlayProperty
+                      meta={item.meta}
+                      itemOverlay={it}
+                      editing={editing}
+                      setOverlay={(o) => {
+                        applyItem({
+                          overlays: item.overlays.map((overlay) =>
+                            overlay.id === it.id ? o : overlay
+                          ),
+                        });
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-            );
-          }) ??
-            (!editing && (
-              <div
-                className={`
-                flex flex-col w-full pt-2 gap-4 duration-200
-                text-center whitespace-nowrap
-                ${
-                  tlBarCollapsed
-                    ? "md:opacity-0 md:scale-x-0"
-                    : "md:opacity-80 md:scale-x-100"
-                }
-              `}
-              >
-                <span>! unknown session !</span>
-                <span>Please select an archive to view</span>
-              </div>
-            ))}
-
-          {/* ---=== EDIT ===--- */}
-
-          <div
-            className="group-unselectable p-[4px] mt-1 w-full max-h-full
-            flex justify-center items-start"
-          >
-            <span
-              className={`
-                group flex justify-center items-center
-                max-w-full max-h-full rounded-full border-1
-                border-black/50 [.dark_&]:border-white/50
-                hover:border-white [.dark_&]:hover:border-black
-                hover:bg-[var(--bg-a1)] [.dark_&]:hover:bg-white
-                hover:text-white [.dark_&]:hover:text-[var(--bg-a1-dark)]
-                pl-2 pr-3 text-sm font-bold whitespace-nowrap
-                transition duration-100
-                ${
-                  tlBarCollapsed ? "scale-0 opacity-0" : "scale-100 opacity-100"
-                }
-              `}
-              onClick={() =>
-                setItem((prev) => {
-                  if (!prev) return prev;
-
-                  const getNewId = (baseId: string) => {
-                    let id = baseId;
-                    let n = 0;
-
-                    while (prev.overlays.some((o) => o.id === id)) {
-                      n++;
-                      id = `${baseId} (${n})`;
+              );
+            }) ??
+              (!editing && (
+                <div
+                  className={`
+                    flex flex-col w-full pt-2 gap-4 duration-200
+                    text-center whitespace-nowrap
+                    ${
+                      tlBarCollapsed
+                        ? "md:opacity-0 md:scale-x-0"
+                        : "md:opacity-80 md:scale-x-100"
                     }
+                  `}
+                >
+                  <span>! unknown session !</span>
+                  <span>Please select an archive to view</span>
+                </div>
+              ))}
 
-                    return id;
-                  };
+            {/* ---=== EDIT ===--- */}
 
-                  return {
-                    ...prev,
-                    overlays: [
-                      ...prev.overlays,
-                      defaultItemOverlay(getNewId("newOverlay")),
-                    ],
-                  };
-                })
-              }
+            <div
+              className="group-unselectable p-[4px] mt-1 w-full max-h-full
+              flex justify-center items-start"
             >
               <span
-                className="flex flex-row items-center
-                h-full gap-2 opacity-70 group-hover:opacity-100"
+                className={`
+                  group flex justify-center items-center
+                  max-w-full max-h-full rounded-full border-1
+                  border-black/50 [.dark_&]:border-white/50
+                  hover:border-white [.dark_&]:hover:border-black
+                  hover:bg-[var(--bg-a1)] [.dark_&]:hover:bg-white
+                  hover:text-white [.dark_&]:hover:text-[var(--bg-a1-dark)]
+                  pl-2 pr-3 text-sm font-bold whitespace-nowrap
+                  transition duration-100
+                  ${
+                    tlBarCollapsed
+                      ? "scale-0 opacity-0"
+                      : "scale-100 opacity-100"
+                  }
+                `}
+                onClick={() =>
+                  setItem((prev) => {
+                    if (!prev) return prev;
+
+                    const getNewId = (baseId: string) => {
+                      let id = baseId;
+                      let n = 0;
+
+                      while (prev.overlays.some((o) => o.id === id)) {
+                        n++;
+                        id = `${baseId} (${n})`;
+                      }
+
+                      return id;
+                    };
+
+                    return {
+                      ...prev,
+                      overlays: [
+                        ...prev.overlays,
+                        defaultItemOverlay(getNewId("newOverlay")),
+                      ],
+                    };
+                  })
+                }
               >
-                <Plus />
-                <span className="pb-[1.7px]">new overlay</span>
+                <span
+                  className="flex flex-row items-center
+                  h-full gap-2 opacity-70 group-hover:opacity-100"
+                >
+                  <Plus />
+                  <span className="pb-[1.7px]">new overlay</span>
+                </span>
               </span>
-            </span>
-          </div>
-        </nav>
+            </div>
+          </nav>
+        </div>
+      </aside>
+
+      {/* ---=== EDIT CONFIG ===--- */}
+
+      <div className="z-15">
+        <OverlayModal
+          onClose={() => {
+            setFoldedImgData(true);
+          }}
+          active={!foldedImgData}
+          title="Config"
+        >
+          <ImageData item={item} applyItem={applyItem} />
+        </OverlayModal>
       </div>
-    </aside>
+    </>
   );
 };
 
