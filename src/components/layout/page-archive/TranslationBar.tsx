@@ -433,160 +433,163 @@ const TranslationBar = ({
 
             {/* ---=== VIEW ===--- */}
 
-            {item?.overlays.map((it) => {
+            {(() => {
               let index = 1;
-              const om = overlayMetas[it.id];
-              return (
-                <div key={it.id} className="flex flex-col w-full h-full">
-                  <div
-                    ref={(el) => {
-                      if (!overlayInfoRefs.current[it.id])
-                        overlayInfoRefs.current[it.id] = {
-                          head: null,
-                          child: null,
-                        };
-                      overlayInfoRefs.current[it.id].head = el;
-                    }}
-                    className={`group group-unselectable relative flex items-center p-[10px_8.8px] rounded-md
-                    font-semibold text-[var(--t-c)] [.dark_&]:text-[var(--t-c-dark)]
-                    border-1 whitespace-nowrap overflow-hidden`}
-                    style={{
-                      backgroundColor:
-                        om && om.color && om.hover
-                          ? `${om.color}19`
-                          : "#00000000",
-                      borderColor:
-                        (!tlBarCollapsed && !foldedTl[it.id]) ||
-                        (om && om.hover)
-                          ? om && om.color
-                            ? om.color
-                            : "black-500/50"
-                          : "#00000000",
-                      color: om && om.color && om.hover ? om.color : "inherit",
-                    }}
-                    onPointerEnter={() =>
-                      setOverlayMeta({ [it.id]: { hover: true } })
-                    }
-                    onPointerLeave={() =>
-                      setOverlayMeta({ [it.id]: { hover: false } })
-                    }
-                    onClick={() => !tlBarCollapsed && toggleFoldedTl(it.id)}
-                  >
-                    <span className="absolute w-6 text-center text-xl">
-                      {it.id == "title" ? <Type /> : index++}
-                    </span>
-                    <span
-                      className={`
-                        ${!editing ? "ml-8" : "ml-6 mr-13"}
-                        origin-left duration-200 px-1
-                        ${
-                          tlBarCollapsed
-                            ? "md:opacity-0 md:scale-x-0 md:px-0"
-                            : "md:opacity-100 md:scale-x-100 md:px-1"
-                        }
-                      `}
-                      onClick={(e) => {
-                        e.stopPropagation();
+              return item?.overlays.map((it) => {
+                const om = overlayMetas[it.id];
+                return (
+                  <div key={it.id} className="flex flex-col w-full h-full">
+                    <div
+                      ref={(el) => {
+                        if (!overlayInfoRefs.current[it.id])
+                          overlayInfoRefs.current[it.id] = {
+                            head: null,
+                            child: null,
+                          };
+                        overlayInfoRefs.current[it.id].head = el;
                       }}
+                      className={`group group-unselectable relative flex items-center p-[10px_8.8px] rounded-md
+                      font-semibold text-[var(--t-c)] [.dark_&]:text-[var(--t-c-dark)]
+                      border-1 whitespace-nowrap overflow-hidden`}
+                      style={{
+                        backgroundColor:
+                          om && om.color && om.hover
+                            ? `${om.color}19`
+                            : "#00000000",
+                        borderColor:
+                          (!tlBarCollapsed && !foldedTl[it.id]) ||
+                          (om && om.hover)
+                            ? om && om.color
+                              ? om.color
+                              : "black-500/50"
+                            : "#00000000",
+                        color:
+                          om && om.color && om.hover ? om.color : "inherit",
+                      }}
+                      onPointerEnter={() =>
+                        setOverlayMeta({ [it.id]: { hover: true } })
+                      }
+                      onPointerLeave={() =>
+                        setOverlayMeta({ [it.id]: { hover: false } })
+                      }
+                      onClick={() => !tlBarCollapsed && toggleFoldedTl(it.id)}
                     >
-                      {!editing ? (
-                        <>{it.id}</>
-                      ) : (
-                        <TextBox
-                          text={it.id}
-                          edit={{ placeholder: it.id }}
-                          setText={(s) =>
-                            applyItem({
-                              overlays: item.overlays.map((overlay) => {
-                                return {
-                                  ...overlay,
-                                  id:
-                                    overlay.id === it.id
-                                      ? s.toString()
-                                      : overlay.id,
-                                };
-                              }),
-                            })
-                          }
-                        />
-                      )}
-                    </span>
-                    {editing && (
+                      <span className="absolute w-6 text-center text-xl">
+                        {it.id == "title" ? <Type /> : index++}
+                      </span>
                       <span
-                        className={`absolute right-9 ${
-                          tlBarCollapsed ? "md:scale-0" : "md:scale-100"
-                        }
-                          opacity-0 group-hover:opacity-100
-                          rounded-md pointer-events-auto border-1
-                          border-black [.dark_&]:border-white
-                          text-black [.dark_&]:text-white
-                          hover:bg-black/20 [.dark_&]:hover:bg-white/20
+                        className={`
+                          ${!editing ? "ml-8" : "ml-6 mr-13"}
+                          origin-left duration-200 px-1
+                          ${
+                            tlBarCollapsed
+                              ? "md:opacity-0 md:scale-x-0 md:px-0"
+                              : "md:opacity-100 md:scale-x-100 md:px-1"
+                          }
                         `}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setItem((prev) => {
-                            if (!prev) return prev;
-
-                            const overlays = prev.overlays
-                              .map((o) => {
-                                return o.id == it.id ? null : o;
-                              })
-                              .filter((o) => o != null);
-
-                            return {
-                              ...prev,
-                              overlays: overlays,
-                            };
-                          });
                         }}
                       >
-                        <Minus />
+                        {!editing ? (
+                          <>{it.id}</>
+                        ) : (
+                          <TextBox
+                            text={it.id}
+                            edit={{ placeholder: it.id }}
+                            setText={(s) =>
+                              applyItem({
+                                overlays: item.overlays.map((overlay) => {
+                                  return {
+                                    ...overlay,
+                                    id:
+                                      overlay.id === it.id
+                                        ? s.toString()
+                                        : overlay.id,
+                                  };
+                                }),
+                              })
+                            }
+                          />
+                        )}
                       </span>
-                    )}
-                    <span
-                      className={`absolute right-2 duration-200 ${
-                        tlBarCollapsed
-                          ? "md:scale-0 md:opacity-0"
-                          : "md:scale-100 md:opacity-100"
+                      {editing && (
+                        <span
+                          className={`absolute right-9 ${
+                            tlBarCollapsed ? "md:scale-0" : "md:scale-100"
+                          }
+                            opacity-0 group-hover:opacity-100
+                            rounded-md pointer-events-auto border-1
+                            border-black [.dark_&]:border-white
+                            text-black [.dark_&]:text-white
+                            hover:bg-black/20 [.dark_&]:hover:bg-white/20
+                          `}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setItem((prev) => {
+                              if (!prev) return prev;
+
+                              const overlays = prev.overlays
+                                .map((o) => {
+                                  return o.id == it.id ? null : o;
+                                })
+                                .filter((o) => o != null);
+
+                              return {
+                                ...prev,
+                                overlays: overlays,
+                              };
+                            });
+                          }}
+                        >
+                          <Minus />
+                        </span>
+                      )}
+                      <span
+                        className={`absolute right-2 duration-200 ${
+                          tlBarCollapsed
+                            ? "md:scale-0 md:opacity-0"
+                            : "md:scale-100 md:opacity-100"
+                        }`}
+                      >
+                        {foldedTl[it.id] ? <ChevronDown /> : <ChevronUp />}
+                      </span>
+                    </div>
+
+                    <div
+                      ref={(el) => {
+                        if (!overlayInfoRefs.current[it.id])
+                          overlayInfoRefs.current[it.id] = {
+                            head: null,
+                            child: null,
+                          };
+                        overlayInfoRefs.current[it.id].child = el;
+                      }}
+                      className={`bg-[#ababab77] [.dark_&]:bg-[#2a2a2a77]
+                      rounded-[8px] origin-top duration-200 overflow-hidden
+                      ${
+                        !tlBarCollapsed && !foldedTl[it.id]
+                          ? "opacity-100 scale-y-100 max-h-60 p-[8px_12px] mb-3"
+                          : "opacity-0 scale-y-0 max-h-0 p-0 mb-0"
                       }`}
                     >
-                      {foldedTl[it.id] ? <ChevronDown /> : <ChevronUp />}
-                    </span>
+                      <OverlayProperty
+                        meta={item.meta}
+                        itemOverlay={it}
+                        editing={editing}
+                        setOverlay={(o) => {
+                          applyItem({
+                            overlays: item.overlays.map((overlay) =>
+                              overlay.id === it.id ? o : overlay
+                            ),
+                          });
+                        }}
+                      />
+                    </div>
                   </div>
-
-                  <div
-                    ref={(el) => {
-                      if (!overlayInfoRefs.current[it.id])
-                        overlayInfoRefs.current[it.id] = {
-                          head: null,
-                          child: null,
-                        };
-                      overlayInfoRefs.current[it.id].child = el;
-                    }}
-                    className={`bg-[#ababab77] [.dark_&]:bg-[#2a2a2a77]
-                    rounded-[8px] origin-top duration-200 overflow-hidden
-                    ${
-                      !tlBarCollapsed && !foldedTl[it.id]
-                        ? "opacity-100 scale-y-100 max-h-60 p-[8px_12px] mb-3"
-                        : "opacity-0 scale-y-0 max-h-0 p-0 mb-0"
-                    }`}
-                  >
-                    <OverlayProperty
-                      meta={item.meta}
-                      itemOverlay={it}
-                      editing={editing}
-                      setOverlay={(o) => {
-                        applyItem({
-                          overlays: item.overlays.map((overlay) =>
-                            overlay.id === it.id ? o : overlay
-                          ),
-                        });
-                      }}
-                    />
-                  </div>
-                </div>
-              );
-            }) ??
+                );
+              });
+            })() ??
               (!editing && (
                 <div
                   className={`
