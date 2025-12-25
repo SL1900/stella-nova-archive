@@ -102,7 +102,7 @@ const OverlayProperty = ({
                 num: {
                   isInt: true,
                   range: {
-                    s: itemOverlay.bounds.x,
+                    s: 0,
                     e: meta.width - itemOverlay.bounds.x,
                   },
                 },
@@ -120,7 +120,7 @@ const OverlayProperty = ({
                 num: {
                   isInt: true,
                   range: {
-                    s: itemOverlay.bounds.y,
+                    s: 0,
                     e: meta.height - itemOverlay.bounds.y,
                   },
                 },
