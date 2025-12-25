@@ -76,7 +76,7 @@ const TextBox = ({
         ? checkNum(value, edit.num.isInt)
         : true)
     ) {
-      updateQuery(value);
+      setQuery(value);
     }
   };
 
