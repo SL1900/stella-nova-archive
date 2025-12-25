@@ -477,15 +477,39 @@ const TranslationBar = ({
                     </span>
                     <span
                       className={`
-                        ml-9 origin-left duration-200
+                        ${!editing ? "ml-8" : "ml-6 mr-13"}
+                        origin-left duration-200 px-1
                         ${
                           tlBarCollapsed
-                            ? "md:opacity-0 md:scale-x-0"
-                            : "md:opacity-100 md:scale-x-100"
+                            ? "md:opacity-0 md:scale-x-0 md:px-0"
+                            : "md:opacity-100 md:scale-x-100 md:px-1"
                         }
                       `}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
                     >
-                      {it.id}
+                      {!editing ? (
+                        <>{it.id}</>
+                      ) : (
+                        <TextBox
+                          text={it.id}
+                          edit={{ placeholder: it.id }}
+                          setText={(s) =>
+                            applyItem({
+                              overlays: item.overlays.map((overlay) => {
+                                return {
+                                  ...overlay,
+                                  id:
+                                    overlay.id === it.id
+                                      ? s.toString()
+                                      : overlay.id,
+                                };
+                              }),
+                            })
+                          }
+                        />
+                      )}
                     </span>
                     {editing && (
                       <span
