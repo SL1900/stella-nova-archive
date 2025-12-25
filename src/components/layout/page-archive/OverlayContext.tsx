@@ -127,9 +127,9 @@ export function OverlayProvider({ children }: { children: ReactNode }) {
               e: { x: imgBounds.x + imgBounds.w, y: imgBounds.y + imgBounds.h },
             }),
             to: getBounded(to, {
-              s: { x: scrollBounds.x, y: scrollBounds.y },
+              s: { x: to.x, y: scrollBounds.y },
               e: {
-                x: scrollBounds.x + scrollBounds.w,
+                x: to.x,
                 y: scrollBounds.y + scrollBounds.h,
               },
             }),
