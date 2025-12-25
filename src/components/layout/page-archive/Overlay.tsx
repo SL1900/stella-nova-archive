@@ -24,15 +24,17 @@ const Overlay = ({
     const scaleX = display.w / resolution.w;
     const scaleY = display.h / resolution.h;
 
-    return item.overlays.map((overlays) => {
-      const { x, y, w, h } = overlays.bounds;
+    return item.overlays.map((o) => {
+      const { x, y, w, h } = o.bounds;
 
       return {
-        id: overlays.id,
+        id: o.id,
         left: offset.x + x * scaleX,
         top: offset.y + y * scaleY,
         width: w * scaleX,
         height: h * scaleY,
+        rotation: o.rotation,
+        shear: o.shear,
       };
     });
   }, [item, resolution, display]);
@@ -88,12 +90,13 @@ const Overlay = ({
               overlayRefs.current[o.id] = el;
             }}
             key={o.id}
-            className="absolute border-2"
+            className="absolute border-2 origin-top-left"
             style={{
               left: o.left,
               top: o.top,
               width: o.width,
               height: o.height,
+              transform: `rotate(${o.rotation}deg)`,
               backgroundColor: `${color}${
                 overlayMetas[o.id]?.hover ? "4A" : overlayActive ? "1F" : "00"
               }`,
@@ -105,7 +108,22 @@ const Overlay = ({
               overlayActive ? toggleOverlayHover(o.id, true) : {}
             }
             onPointerLeave={() => toggleOverlayHover(o.id, false)}
-          />
+          >
+            <div
+              className="absolute -translate-x-[9px] -translate-y-[2px] w-[16px] h-[2px]"
+              style={{
+                backgroundColor: `${color}`,
+                transform: "rotate(45deg)",
+              }}
+            />
+            <div
+              className="absolute -translate-x-[9px] -translate-y-[2px] w-[16px] h-[2px]"
+              style={{
+                backgroundColor: `${color}`,
+                transform: "rotate(135deg)",
+              }}
+            />
+          </div>
         );
       })}
     </>
