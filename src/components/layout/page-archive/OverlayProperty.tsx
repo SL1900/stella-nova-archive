@@ -37,7 +37,7 @@ const OverlayProperty = ({
           <span className="text-sm flex items-center">Text</span>
           <TextBox
             text={itemOverlay.text}
-            edit={{ placeholder: "null" }}
+            edit={{ placeholder: "< null >" }}
             setText={(s) => applyOverlay({ text: s.toString() })}
           />
         </>

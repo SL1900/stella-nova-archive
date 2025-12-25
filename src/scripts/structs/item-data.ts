@@ -31,7 +31,7 @@ export interface ItemData {
   id: string;
   type: string;
   category: string;
-  sub_category: string[] | null;
+  sub_category: string[];
   title: string;
   description: string;
   source: string[];
@@ -45,7 +45,7 @@ export interface ItemDataFraction {
   id?: string;
   type?: string;
   category?: string;
-  sub_category?: string[] | null;
+  sub_category?: string[];
   title?: string;
   description?: string;
   source?: string[];
@@ -73,7 +73,7 @@ export function defaultItemOverlay(id?: string): ItemOverlay {
     bounds_end: null,
     rotation: 0,
     shear: 0,
-    text: "null",
+    text: "< null >",
     notes: null,
   };
 }
@@ -83,7 +83,7 @@ export function defaultItemData(id?: string): ItemData {
     id: id ?? "newItem",
     type: "image",
     category: "other",
-    sub_category: null,
+    sub_category: [],
     title: "< null >",
     description: "< null >",
     source: [],
