@@ -99,7 +99,19 @@ const ImageData = ({
               return options;
             })()}
             select={item?.category}
-            setSelect={(s) => applyItem({ category: s.toString() })}
+            setSelect={(s) =>
+              applyItem({
+                category: s.toString(),
+                sub_category: (() => {
+                  let options: string[] = [];
+                  filterTags.forEach((t) => {
+                    if (t.main === item?.category && t.sub.length > 0)
+                      options = t.sub;
+                  });
+                  return [options[0] ?? "< null >"];
+                })(),
+              })
+            }
           />
           <span className="text-sm flex items-center">Sub-Category</span>
           <Dropdown
@@ -111,7 +123,11 @@ const ImageData = ({
               });
               return options;
             })()}
-            select={item?.sub_category?.[0]}
+            select={
+              item && item.sub_category.length > 0
+                ? item.sub_category[0]
+                : undefined
+            }
             setSelect={(s) => applyItem({ sub_category: [s.toString()] })}
           />
           <span className="text-sm flex items-center">Title</span>
