@@ -102,7 +102,7 @@ const TranslationBar = ({
     const rect = overlayContainerRef.current.getBoundingClientRect();
 
     scrollBounds = { x: rect.x, y: rect.y, w: rect.width, h: rect.height };
-  }, [overlayContainerRef.current]);
+  }, [overlayContainerRef.current?.getBoundingClientRect()]);
 
   useEffect(() => {
     const overlayHeader = overlayInfoRefs.current;
