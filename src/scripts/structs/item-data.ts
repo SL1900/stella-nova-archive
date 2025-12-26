@@ -71,7 +71,7 @@ export function defaultItemOverlay(id?: string): ItemOverlay {
   return {
     id: id ?? "newOverlay",
     frame: null,
-    bounds: { x: 0, y: 0, w: 0, h: 0 },
+    bounds: { x: 0, y: 0, w: 300, h: 300 },
     bounds_end: null,
     rotation: 0,
     shear: 0,
@@ -92,12 +92,12 @@ export function defaultItemData(id?: string): ItemData {
     source: [],
 
     meta: {
-      width: 0,
-      height: 0,
+      width: 1700,
+      height: 1700,
       frames: null,
       version: "0.0.0",
     },
 
-    overlays: [],
+    overlays: [defaultItemOverlay()],
   };
 }
