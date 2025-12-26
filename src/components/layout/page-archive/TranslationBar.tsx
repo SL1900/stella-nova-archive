@@ -256,7 +256,11 @@ const TranslationBar = ({
                 }
               `}
               >
-                <ImageMetadata item={item} applyItem={applyItem} />
+                <ImageMetadata
+                  item={item}
+                  applyItem={applyItem}
+                  canCollapse={true}
+                />
               </div>
             )}
 
@@ -510,7 +514,11 @@ const TranslationBar = ({
             active={!foldedImgData}
             title="Config"
           >
-            <ImageMetadata item={item} applyItem={applyItem} />
+            <ImageMetadata
+              item={item}
+              applyItem={applyItem}
+              canCollapse={false}
+            />
           </OverlayModal>
         </div>
       )}
