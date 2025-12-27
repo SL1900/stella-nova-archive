@@ -63,6 +63,8 @@ const ArchiveLayout = () => {
       if (!(localStorage?.getItem("bypassEnterEditorPopup") === "true")) {
         setEditorPopup(true);
       }
+    } else {
+      setEditorPopup(false);
     }
   }, [urlId, urlEdit]);
 
