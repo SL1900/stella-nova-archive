@@ -13,6 +13,7 @@ const TextBox = ({
 }: {
   text: string | null;
   edit?: {
+    initText?: string;
     placeholder: string;
     applyPlaceholder?: boolean;
     convert?: (s: string) => string;
@@ -99,6 +100,7 @@ const TextBox = ({
   };
 
   useEffect(() => {
+    if (edit?.initText) updateQuery(edit.initText);
     handleInputBlur();
   }, []);
 
