@@ -148,7 +148,7 @@ export function OverlayProvider({ children }: { children: ReactNode }) {
         }
 
         const pair = getNearestPair(t.overlay, t.side);
-        const hovering = overlayMetas[id].hover;
+        const hovering = overlayMetas[id]?.hover ?? false;
 
         return (
           <Fragment key={id}>
