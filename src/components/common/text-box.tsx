@@ -102,7 +102,7 @@ const TextBox = ({
   useEffect(() => {
     if (edit?.initText) updateQuery(edit.initText);
     handleInputBlur();
-  }, []);
+  }, [edit?.placeholder]);
 
   return (
     <>

@@ -1,4 +1,10 @@
-import { CircleQuestionMark, FileSpreadsheet, Link, Menu } from "lucide-react";
+import {
+  CircleQuestionMark,
+  FileSpreadsheet,
+  Link,
+  Menu,
+  PenLine,
+} from "lucide-react";
 import GitHubLogo from "/assets/github.svg";
 import DiscordLogo from "/assets/discord.svg";
 import NovaTable from "/assets/nova-alphabet-table.jpg";
@@ -8,6 +14,7 @@ import OverlayModal from "../../common/overlay-modal";
 import HyperLink from "../../common/hyperlink";
 import ScrollableImgGroup from "../../common/scrollable-imggroup";
 import pkg from "../../../../package.json";
+import { useNavigate } from "react-router-dom";
 
 const items = [
   {
@@ -108,6 +115,7 @@ const Sidebar = ({
   collapsed: boolean;
 }) => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   return (
     <aside
@@ -147,6 +155,27 @@ const Sidebar = ({
 
       <div className="flex flex-col justify-between h-full">
         <nav className="flex flex-col gap-2 mt-3" aria-label="Sidebar">
+          <button
+            className="flex items-center p-[10px_10px] rounded-md
+              font-semibold text-[var(--t-c)] [.dark_&]:text-[var(--t-c-dark)]
+              hover:bg-blue-500/10 [.dark_&]:hover:bg-blue-300/10
+              hover:text-blue-600 [.dark_&]:hover:text-blue-400
+              whitespace-nowrap"
+            onClick={() => navigate(`/archive?edit=true`)}
+          >
+            <span className="absolute w-6 text-center">
+              <PenLine />
+            </span>
+            <span
+              className={`
+                ml-9 origin-left duration-200
+                ${collapsed ? "opacity-0 scale-x-0" : "opacity-100 scale-x-100"}
+              `}
+            >
+              Edit Mode
+            </span>
+          </button>
+
           {items.map((it) => (
             <button
               key={it.id}

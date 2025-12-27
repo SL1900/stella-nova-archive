@@ -15,7 +15,7 @@ const ImageMetadata = ({
   applyItem,
   canCollapse,
 }: {
-  item: ItemData | null;
+  item: ItemData;
   applyItem: (newI: ItemDataFraction) => void;
   canCollapse: boolean;
 }) => {
@@ -35,14 +35,14 @@ const ImageMetadata = ({
         <div className="group-selectable grid grid-cols-[1fr_1fr] auto-rows-[minmax(30px,auto)] gap-1 px-1">
           <span className="text-sm flex items-center">Id</span>
           <TextBox
-            text={item?.id ?? defaultIt.id}
-            edit={{ placeholder: defaultIt.id }}
+            text={item.id}
+            edit={{ placeholder: item.id || defaultIt.id }}
             setText={(s) => applyItem({ id: s.toString() })}
           />
           <span className="text-sm flex items-center">Type</span>
           <Dropdown
             options={["image"]}
-            select={item?.type}
+            select={item.type}
             setSelect={(s) => applyItem({ type: s.toString() })}
           />
           <span className="text-sm flex items-center">Category</span>
@@ -54,14 +54,14 @@ const ImageMetadata = ({
               });
               return options;
             })()}
-            select={item?.category}
+            select={item.category}
             setSelect={(s) =>
               applyItem({
                 category: s.toString(),
                 sub_category: (() => {
                   let options: string[] = [];
                   filterTags.forEach((t) => {
-                    if (t.main === item?.category && t.sub.length > 0)
+                    if (t.main === item.category && t.sub.length > 0)
                       options = t.sub;
                   });
                   return [options[0] ?? "< null >"];
@@ -74,28 +74,26 @@ const ImageMetadata = ({
             options={(() => {
               let options = ["none"];
               filterTags.forEach((t) => {
-                if (t.main === item?.category && t.sub.length > 0)
+                if (t.main === item.category && t.sub.length > 0)
                   options = t.sub;
               });
               return options;
             })()}
             select={
-              item && item.sub_category.length > 0
-                ? item.sub_category[0]
-                : undefined
+              item.sub_category.length > 0 ? item.sub_category[0] : undefined
             }
             setSelect={(s) => applyItem({ sub_category: [s.toString()] })}
           />
           <span className="text-sm flex items-center">Title</span>
           <TextBox
-            text={item?.title ?? defaultIt.title}
-            edit={{ placeholder: defaultIt.title }}
+            text={item.title}
+            edit={{ placeholder: item.title || defaultIt.title }}
             setText={(s) => applyItem({ title: s.toString() })}
           />
           <span className="text-sm flex items-center">Description</span>
           <TextBox
-            text={item?.description ?? defaultIt.description}
-            edit={{ placeholder: defaultIt.description }}
+            text={item.description}
+            edit={{ placeholder: item.description || defaultIt.description }}
             setText={(s) => applyItem({ description: s.toString() })}
           />
         </div>
@@ -113,11 +111,10 @@ const ImageMetadata = ({
         <div className="group-selectable grid grid-cols-[1fr_1fr] auto-rows-[minmax(30px,auto)] gap-1 px-1">
           <span className="text-sm flex items-center">Width</span>
           <TextBox
-            text={
-              item?.meta.width.toString() ?? defaultIt.meta.width.toString()
-            }
+            text={item.meta.width.toString()}
             edit={{
-              placeholder: defaultIt.meta.width.toString(),
+              placeholder:
+                item.meta.width.toString() || defaultIt.meta.width.toString(),
               check: (s) => {
                 const regex = /^[0-9\b]+$/;
                 return regex.test(s);
@@ -130,7 +127,6 @@ const ImageMetadata = ({
               },
             }}
             setText={(s) => {
-              if (!item) return;
               applyItem({
                 meta: {
                   ...item.meta,
@@ -141,11 +137,10 @@ const ImageMetadata = ({
           />
           <span className="text-sm flex items-center">Height</span>
           <TextBox
-            text={
-              item?.meta.height.toString() ?? defaultIt.meta.height.toString()
-            }
+            text={item.meta.height.toString()}
             edit={{
-              placeholder: defaultIt.meta.height.toString(),
+              placeholder:
+                item.meta.height.toString() || defaultIt.meta.height.toString(),
               check: (s) => {
                 const regex = /^[0-9\b]+$/;
                 return regex.test(s);
@@ -158,7 +153,6 @@ const ImageMetadata = ({
               },
             }}
             setText={(s) => {
-              if (!item) return;
               applyItem({
                 meta: {
                   ...item.meta,
@@ -169,9 +163,9 @@ const ImageMetadata = ({
           />
           <span className="text-sm flex items-center">Version</span>
           <TextBox
-            text={item?.meta.version ?? defaultIt.meta.version}
+            text={item.meta.version}
             edit={{
-              placeholder: defaultIt.meta.version,
+              placeholder: item.meta.version || defaultIt.meta.version,
               check: (s) => {
                 const regex = /^[0-9\b\.]+$/;
                 const arr = s.split(".");
@@ -188,7 +182,6 @@ const ImageMetadata = ({
               },
             }}
             setText={(s) => {
-              if (!item) return;
               applyItem({
                 meta: {
                   ...item.meta,

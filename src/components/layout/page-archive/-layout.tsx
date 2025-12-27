@@ -51,9 +51,8 @@ const ArchiveLayout = () => {
   useEffect(() => {
     resetOverlayData();
     loadData();
-    if (urlId == null && urlEdit)
+    if (urlId == null && urlEdit) {
       navigate(`/archive?edit=true&id=${"new_item"}`);
-    if (urlEdit) {
       setItem(defaultItemData());
       setImgSrc("");
     }
