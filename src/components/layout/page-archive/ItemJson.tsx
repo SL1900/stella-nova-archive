@@ -78,7 +78,7 @@ const ItemJson = ({ item }: { item: ItemData }) => {
             absolute z-1 inset-0 bg-[#55CC55] rounded-md
             flex justify-center items-center p-1
             transition-opacity duration-100
-            ${isCopied ? "opacity-100" : "opacity-0"}
+            ${isDownloaded ? "opacity-100" : "opacity-0"}
           `}
           >
             <Check color="white" strokeWidth={3} />

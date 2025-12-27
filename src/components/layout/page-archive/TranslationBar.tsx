@@ -5,6 +5,7 @@ import {
   FileCog,
   Menu,
   Minus,
+  PenLine,
   Plus,
   Type,
   Upload,
@@ -19,6 +20,7 @@ import {
 } from "react";
 import {
   defaultItemOverlay,
+  getFileName,
   type ItemData,
   type ItemDataFraction,
 } from "../../../scripts/structs/item-data";
@@ -31,6 +33,7 @@ import OverlayModal from "../../common/overlay-modal";
 import ImageMetadata from "./ImageData";
 import ItemJson from "./ItemJson";
 import { getImageDimensions } from "../../../scripts/image";
+import { useNavigate } from "react-router-dom";
 
 /* ---LOCAL_TEST--- */
 // const overlayItems: ItemOverlay[] = [
@@ -200,6 +203,15 @@ const TranslationBar = ({
     applyImageData(file.name, imgUrl);
   };
 
+  const navigate = useNavigate();
+  const handleNavigate = () => {
+    navigate(
+      `/archive?edit=true${
+        item ? `&id=${getFileName(item).split(".")[0]}` : ""
+      }`
+    );
+  };
+
   return (
     <>
       <aside
@@ -243,6 +255,17 @@ const TranslationBar = ({
               Translation
             </span>
           </button>
+
+          {!editing && useIsMd() && (
+            <div
+              className="min-w-[50px] h-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ButtonToggle onToggle={handleNavigate} fullSize={true}>
+                <PenLine />
+              </ButtonToggle>
+            </div>
+          )}
 
           {editing && useIsMd() && (
             <>
@@ -303,6 +326,32 @@ const TranslationBar = ({
             overflow-x-hidden overflow-y-auto"
             aria-label="Translation bar"
           >
+            {!editing && !useIsMd() && (
+              <div
+                className="group-unselectable p-[4px] my-1 w-full max-h-full
+                  flex justify-center items-start"
+              >
+                <div
+                  className="group relative flex justify-center items-center
+                    max-w-full max-h-full text-sm font-bold"
+                >
+                  <ButtonToggle
+                    onToggle={handleNavigate}
+                    fullSize={true}
+                    alwaysBorder={true}
+                  >
+                    <span
+                      className="flex flex-row items-center py-2 pl-2 pr-3
+                      h-full gap-2 opacity-70 group-hover:opacity-100"
+                    >
+                      <PenLine />
+                      <span className="pb-[1.7px]">Edit Mode</span>
+                    </span>
+                  </ButtonToggle>
+                </div>
+              </div>
+            )}
+
             {/* ---=== EDIT ===--- */}
 
             {editing && !useIsMd() && (
@@ -370,11 +419,13 @@ const TranslationBar = ({
                   </div>
                 </div>
 
-                <ImageMetadata
-                  item={item}
-                  applyItem={applyItem}
-                  canCollapse={true}
-                />
+                {item && (
+                  <ImageMetadata
+                    item={item}
+                    applyItem={applyItem}
+                    canCollapse={true}
+                  />
+                )}
               </div>
             )}
 
@@ -606,7 +657,7 @@ const TranslationBar = ({
                         ...prev,
                         overlays: [
                           ...prev.overlays,
-                          defaultItemOverlay(getNewId("newOverlay")),
+                          defaultItemOverlay(getNewId("new_overlay")),
                         ],
                       };
                     })
@@ -637,11 +688,13 @@ const TranslationBar = ({
             active={!foldedImgData}
             title="Config"
           >
-            <ImageMetadata
-              item={item}
-              applyItem={applyItem}
-              canCollapse={false}
-            />
+            {item && (
+              <ImageMetadata
+                item={item}
+                applyItem={applyItem}
+                canCollapse={false}
+              />
+            )}
           </OverlayModal>
           <OverlayModal
             onClose={() => {
