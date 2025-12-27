@@ -657,7 +657,7 @@ const TranslationBar = ({
                         ...prev,
                         overlays: [
                           ...prev.overlays,
-                          defaultItemOverlay(getNewId("newOverlay")),
+                          defaultItemOverlay(getNewId("new_overlay")),
                         ],
                       };
                     })
