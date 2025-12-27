@@ -128,10 +128,8 @@ export function processItemData(i: ItemData): ItemData {
   if (i.sub_category.includes("< null >")) i.sub_category = [];
 
   if (i.source.length === 0) {
-    const subcat_pref = prefixes[i.sub_category[0]];
-    const prefix = `assets/${i.category}/${
-      subcat_pref ? `${subcat_pref}-` : ""
-    }${i.id}`;
+    const subcat = i.sub_category[0];
+    const prefix = `assets/${i.category}/${subcat ? `${subcat}/` : ""}${i.id}`;
     i.source = [`${prefix}.webp`, `${prefix}.jpg`];
   }
 
