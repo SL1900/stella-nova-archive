@@ -30,6 +30,7 @@ import ButtonToggle from "../../common/button-toggle";
 import OverlayModal from "../../common/overlay-modal";
 import ImageMetadata from "./ImageData";
 import ItemJson from "./ItemJson";
+import { getImageDimensions } from "../../../scripts/image";
 
 /* ---LOCAL_TEST--- */
 // const overlayItems: ItemOverlay[] = [
@@ -176,12 +177,27 @@ const TranslationBar = ({
     });
   };
 
+  const applyImageData = async (name: string, imgSrc: string) => {
+    if (!item) return;
+
+    const imgDim = await getImageDimensions(imgSrc);
+    applyItem({
+      id: name.substring(0, name.lastIndexOf(".")),
+      meta: {
+        ...item.meta,
+        width: imgDim.width,
+        height: imgDim.height,
+      },
+    });
+  };
+
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = e.target.files?.[0];
     if (!file) return;
 
     const imgUrl: string = URL.createObjectURL(file);
     setImgSrc(imgUrl);
+    applyImageData(file.name, imgUrl);
   };
 
   return (
