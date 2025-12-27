@@ -9,6 +9,7 @@ import Collapsible from "./components/common/collapsible";
 import { ThemeSwitcher } from "./components/common/theme";
 
 import { appRoutes } from ".";
+import ButtonToggle from "./components/common/button-toggle";
 
 function App() {
   const navigate = useNavigate();
@@ -43,6 +44,15 @@ function App() {
         <DebugBox title={title}>
           <div className="mb-2">
             <ThemeSwitcher systemTheme={true} />
+          </div>
+          <div className="h-[30px] mb-2">
+            <ButtonToggle
+              onToggle={() => localStorage.clear()}
+              alwaysBorder={true}
+              fullSize={true}
+            >
+              <span className="pb-0.5">Clear Storage</span>
+            </ButtonToggle>
           </div>
           <Collapsible
             title="Route Navigator"
