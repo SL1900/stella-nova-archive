@@ -412,7 +412,7 @@ const TranslationBar = ({
                           className={`absolute right-9 ${
                             tlBarCollapsed ? "md:scale-0" : "md:scale-100"
                           }
-                            opacity-0 group-hover:opacity-100
+                            md:opacity-0 md:group-hover:opacity-100
                             rounded-md pointer-events-auto border-1
                             border-black [.dark_&]:border-white
                             text-black [.dark_&]:text-white
