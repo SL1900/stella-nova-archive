@@ -38,7 +38,7 @@ const OverlayProperty = ({
           <span className="text-sm flex items-center">Text</span>
           <TextBox
             text={itemOverlay.text}
-            edit={{ placeholder: "< null >" }}
+            edit={{ placeholder: itemOverlay.text }}
             setText={(s) => applyOverlay({ text: s.toString() })}
           />
         </>
@@ -54,7 +54,7 @@ const OverlayProperty = ({
             <span className="text-sm flex items-center">Notes</span>
             <TextBox
               text={itemOverlay.notes}
-              edit={{ placeholder: "" }}
+              edit={{ placeholder: itemOverlay.notes ?? "" }}
               setText={(s) => applyOverlay({ notes: s.toString() })}
             />
           </>
@@ -66,7 +66,7 @@ const OverlayProperty = ({
             <TextBox
               text={`${itemOverlay.bounds.x}`}
               edit={{
-                placeholder: "0",
+                placeholder: itemOverlay.bounds.x.toString(),
                 num: {
                   isInt: true,
                   range: { s: 0, e: meta.width },
@@ -81,7 +81,7 @@ const OverlayProperty = ({
             <TextBox
               text={`${itemOverlay.bounds.y}`}
               edit={{
-                placeholder: "0",
+                placeholder: itemOverlay.bounds.y.toString(),
                 num: {
                   isInt: true,
                   range: { s: 0, e: meta.height },
@@ -99,7 +99,7 @@ const OverlayProperty = ({
             <TextBox
               text={`${itemOverlay.bounds.w}`}
               edit={{
-                placeholder: "0",
+                placeholder: itemOverlay.bounds.w.toString(),
                 num: {
                   isInt: true,
                   range: {
@@ -117,7 +117,7 @@ const OverlayProperty = ({
             <TextBox
               text={`${itemOverlay.bounds.h}`}
               edit={{
-                placeholder: "0",
+                placeholder: itemOverlay.bounds.h.toString(),
                 num: {
                   isInt: true,
                   range: {
@@ -137,7 +137,7 @@ const OverlayProperty = ({
           <TextBox
             text={`${itemOverlay.rotation}`}
             edit={{
-              placeholder: "0.0",
+              placeholder: itemOverlay.rotation.toString(),
               num: { isInt: false, range: { s: -180, e: 180 } },
             }}
             setText={(s) =>
@@ -150,7 +150,7 @@ const OverlayProperty = ({
           <TextBox
             text={`${itemOverlay.shear}`}
             edit={{
-              placeholder: "0.0",
+              placeholder: itemOverlay.shear.toString(),
               num: { isInt: false, range: { s: -90, e: 90 } },
             }}
             setText={(s) =>
@@ -163,6 +163,7 @@ const OverlayProperty = ({
           <TextBox
             text={`${itemOverlay.color}`}
             edit={{
+              initText: itemOverlay.color,
               placeholder: DEFAULT_COLOR,
               applyPlaceholder: false,
               convert: (s) => {
