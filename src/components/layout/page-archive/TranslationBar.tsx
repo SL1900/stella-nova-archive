@@ -1,6 +1,7 @@
 import {
   ChevronDown,
   ChevronUp,
+  CircleQuestionMark,
   CodeXml,
   FileCog,
   Menu,
@@ -34,6 +35,7 @@ import ImageMetadata from "./ImageData";
 import ItemJson from "./ItemJson";
 import { getImageDimensions } from "../../../scripts/image";
 import { useNavigate } from "react-router-dom";
+import HyperLink from "../../common/hyperlink";
 
 /* ---LOCAL_TEST--- */
 // const overlayItems: ItemOverlay[] = [
@@ -80,6 +82,7 @@ const TranslationBar = ({
   editing: boolean;
 }) => {
   const [foldedTl, setFoldedTl] = useState<{ [key: string]: boolean }>({});
+  const [foldedAboutTl, setFoldedAboutTl] = useState(true);
   const [foldedImgData, setFoldedImgData] = useState(true);
   const [foldedJson, setFoldedJson] = useState(true);
   const { overlayMetas, setOverlayMeta, setOverlayTransform, removeOverlay } =
@@ -252,9 +255,24 @@ const TranslationBar = ({
                 }
               `}
             >
-              Translation
+              {!editing ? "Translation" : "Translator"}
             </span>
           </button>
+
+          {editing && (
+            <div
+              className="min-w-[50px] h-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ButtonToggle
+                toggle={foldedAboutTl}
+                onToggle={() => setFoldedAboutTl(false)}
+                fullSize={true}
+              >
+                <CircleQuestionMark />
+              </ButtonToggle>
+            </div>
+          )}
 
           {!editing && useIsMd() && (
             <div
@@ -410,7 +428,7 @@ const TranslationBar = ({
                     >
                       <span
                         className="flex flex-row items-center py-2 pl-2 pr-3
-                      h-full gap-2 opacity-70 group-hover:opacity-100"
+                        h-full gap-2 opacity-70 group-hover:opacity-100"
                       >
                         <CodeXml />
                         <span className="pb-[1.7px]">get JSON</span>
@@ -704,6 +722,30 @@ const TranslationBar = ({
             title="JSON"
           >
             {item && <ItemJson item={item} />}
+          </OverlayModal>
+          <OverlayModal
+            onClose={() => {
+              setFoldedAboutTl(true);
+            }}
+            active={!foldedAboutTl}
+            title="About Translation Editor"
+          >
+            <div className="max-w-[400px] flex flex-col gap-2">
+              <span>
+                This session is the built-in translation editor intended for{" "}
+                <span className="font-bold">Stella Nova Archive Database</span>{" "}
+                contribution.
+              </span>
+              <span>
+                <span className="text-blue-600 [.dark_&]:text-blue-400">
+                  <HyperLink
+                    link="https://github.com/BB-69/stella-nova-archive-db/blob/main/doc/contribution.md#translation-overlays"
+                    text="Click this link"
+                  />
+                </span>{" "}
+                to see the guide on how to use this editor and contribute.
+              </span>
+            </div>
           </OverlayModal>
         </div>
       )}

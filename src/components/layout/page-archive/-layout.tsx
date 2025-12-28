@@ -114,24 +114,23 @@ const ArchiveLayout = () => {
           title="ENTER EDITOR MODE"
           canDismiss={false}
         >
-          <div className="max-w-[min(350px,90vw)] flex flex-col justify-center gap-4">
+          <div className="max-w-[460px] flex flex-col justify-center gap-4">
             <span className="text-center">
-              The following session is the built-in editor intended for{" "}
+              The following session is the built-in translation editor intended
+              for{" "}
               <span className="font-bold">Stella Nova Archive Database</span>{" "}
               contribution only. Follow the{" "}
               <span className="text-blue-600 [.dark_&]:text-blue-400">
                 <HyperLink
-                  link="https://github.com/BB-69/stella-nova-archive-db.git"
+                  link="https://github.com/BB-69/stella-nova-archive-db/blob/main/doc/contribution.md#translation-overlays"
                   text="link"
                 />{" "}
               </span>
-              to see more about{" "}
-              <span className="italic opacity-60">{"(the coming soon)"}</span>{" "}
-              on how to use this editor and contribute.
+              to see more on how to use this editor and contribute.
             </span>
             <div
               className="group-unselectable p-[4px] my-1 w-full max-h-full
-              flex flex-row max-[370px]:flex-col justify-evenly gap-2"
+              flex flex-row max-[440px]:flex-col justify-evenly gap-2"
             >
               <div
                 className="group relative flex justify-center items-center
@@ -158,9 +157,9 @@ const ArchiveLayout = () => {
                 hover:text-white [.dark_&]:hover:text-[var(--bg-a1-dark)]
                 text-sm font-bold whitespace-nowrap
                 transition duration-100"
-                onClick={() => setEditorPopup(false)}
+                onClick={() => navigate("/browse")}
               >
-                <span className="px-3 py-2">Proceed</span>
+                <span className="px-3 py-2">Back to Browsing</span>
               </div>
             </div>
           </div>
