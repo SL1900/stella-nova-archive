@@ -114,20 +114,19 @@ const ArchiveLayout = () => {
           title="ENTER EDITOR MODE"
           canDismiss={false}
         >
-          <div className="max-w-[min(350px,90vw)] flex flex-col justify-center gap-4">
+          <div className="max-w-[360px] flex flex-col justify-center gap-4">
             <span className="text-center">
-              The following session is the built-in editor intended for{" "}
+              The following session is the built-in translation editor intended
+              for{" "}
               <span className="font-bold">Stella Nova Archive Database</span>{" "}
               contribution only. Follow the{" "}
               <span className="text-blue-600 [.dark_&]:text-blue-400">
                 <HyperLink
-                  link="https://github.com/BB-69/stella-nova-archive-db.git"
+                  link="https://github.com/BB-69/stella-nova-archive-db/blob/main/doc/contribution.md#translation-overlays"
                   text="link"
                 />{" "}
               </span>
-              to see more about{" "}
-              <span className="italic opacity-60">{"(the coming soon)"}</span>{" "}
-              on how to use this editor and contribute.
+              to see more on how to use this editor and contribute.
             </span>
             <div
               className="group-unselectable p-[4px] my-1 w-full max-h-full
