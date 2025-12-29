@@ -73,8 +73,11 @@ if (hasVersion && shouldOverride) {
     block + "\n"
   );
 } else {
-  const lines = content.split("\n");
-  updated = [lines[0], "", block, "", ...lines.slice(1)].join("\n");
+  const rest = content.replace(/^# CHANGELOGS\s*/m, "");
+
+  updated = `# CHANGELOGS
+
+${block}${rest}`;
 }
 
 fs.writeFileSync(changelogPath, updated);
