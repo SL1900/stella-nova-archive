@@ -10,7 +10,7 @@ const overrideMarker = "> CHANGELOG_OVERRIDE";
 
 if (!prBody.includes(startMarker) || !prBody.includes(endMarker)) {
   console.log(
-    `⚠️ No changelog wrappers found. If you have changelog, consider wrapping it in between '${startMarker}' and '${endMarker}'`
+    `⚠️ No changelog wrappers found.\nIf you have changelog, consider wrapping it in between '${startMarker}' and '${endMarker}'`
   );
   process.exit(0);
 }
@@ -27,7 +27,7 @@ const shouldOverride = prBody.includes(overrideMarker);
 const versionMatch = prBody.match(/CHANGELOG_VERSION:\s*([\d.]+)/);
 if (!versionMatch) {
   console.log(
-    `⚠️ No '${versionMarker}' found. Consider putting marker '> ${versionMarker}: {major}.{minor}'`
+    `⚠️ No '${versionMarker}' found.\nConsider putting marker '> ${versionMarker}: {major}.{minor}'`
   );
   process.exit(0);
 }
@@ -58,7 +58,7 @@ const hasVersion = headerRegex.test(content);
 
 if (hasVersion && !shouldOverride) {
   console.log(
-    `⚠️ Changelog for [ v${version} ] already exists. If you want to override previous changelog, consider putting marker '${overrideMarker}'`
+    `⚠️ Changelog for [ v${version} ] already exists.\nIf you want to override previous changelog, consider putting marker '${overrideMarker}'`
   );
   process.exit(0);
 }
