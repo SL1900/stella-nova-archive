@@ -1,9 +1,10 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from "react";
 import QMark from "/assets/fallback/question-mark.svg";
 import Ruler from "./Ruler";
 import { useDebugValue } from "../../../hooks/useDebugValue";
 import type { ItemData } from "../../../scripts/structs/item-data";
 import Overlay from "./Overlay";
+import SelectionArea from "./SelectionArea";
 
 let imgBounds = { x: 0, y: 0, w: 0, h: 0 };
 export const getImageBounds = () => {
@@ -14,10 +15,12 @@ const Content = ({
   item,
   imgSrc,
   editing,
+  setCurrentItem,
 }: {
   item: ItemData | null;
   imgSrc: string;
   editing: boolean;
+  setCurrentItem: Dispatch<SetStateAction<ItemData | null>>;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -179,6 +182,14 @@ const Content = ({
           display={display}
           offset={imageOffset}
           editing={editing}
+        />
+
+        <SelectionArea
+            resolution={resolution}
+            display={display}
+            offset={imageOffset}
+            setItem={setCurrentItem}
+            imgRef={imgRef}
         />
       </div>
     </div>
