@@ -206,6 +206,23 @@ const TranslationBar = ({
     applyImageData(file.name, imgUrl);
   };
 
+  const handleJSONLoad = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file: File | undefined = e.target.files?.[0];
+    if (!file) return;
+
+    let text = await file.text();
+    let json: ItemData = JSON.parse(text);
+
+    console.log(json)
+
+    setItem((prev) => {
+        if(!prev) return prev;
+        let new_item = {...prev, ...json};
+
+        return new_item;
+    })
+  }
+
   const navigate = useNavigate();
   const handleNavigate = () => {
     navigate(
@@ -408,6 +425,35 @@ const TranslationBar = ({
                     >
                       <Upload />
                       <span className="pb-[1.7px]">upload image</span>
+                    </span>
+                  </div>
+                </div>
+                <div
+                  className="group-unselectable p-[4px] my-1 w-full max-h-full
+                  flex justify-center items-start"
+                >
+                  <div
+                    className="group relative flex justify-center items-center
+                    max-w-full max-h-full rounded-xl border-1
+                    border-black/50 [.dark_&]:border-white/50
+                    hover:border-white [.dark_&]:hover:border-black
+                    hover:bg-[var(--bg-a1)] [.dark_&]:hover:bg-white
+                    hover:text-white [.dark_&]:hover:text-[var(--bg-a1-dark)]
+                    pl-2 pr-3 text-sm font-bold whitespace-nowrap
+                    transition duration-100"
+                  >
+                    <input
+                      className="absolute inset-0 opacity-0"
+                      type="file"
+                      accept="application/json"
+                      onChange={handleJSONLoad}
+                    />
+                    <span
+                      className="flex flex-row items-center py-2
+                      h-full gap-2 opacity-70 group-hover:opacity-100"
+                    >
+                      <Upload />
+                      <span className="pb-[1.7px]">Load JSON</span>
                     </span>
                   </div>
                 </div>
