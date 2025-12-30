@@ -92,7 +92,7 @@ const ArchiveLayout = () => {
       >
         <div className="grid grid-rows-[80px_1fr] min-w-full min-h-full">
           <InfoHeader item={item} />
-          <Content item={item} imgSrc={imgSrc} editing={urlEdit} />
+          <Content item={item} imgSrc={imgSrc} editing={urlEdit} setCurrentItem={setItem} />
         </div>
 
         <TranslationBar
