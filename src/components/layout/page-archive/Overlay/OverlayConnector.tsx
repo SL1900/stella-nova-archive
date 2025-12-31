@@ -1,10 +1,10 @@
 import { useEffect, useState, useMemo, useRef } from "react";
-import { useIsChanging } from "../../../hooks/useIsChanging";
-import { useIsMd } from "../../../hooks/useIsMd";
-import { getDistance } from "../../../scripts/distance";
+import { useIsChanging } from "../../../../hooks/useIsChanging";
+import { useIsMd } from "../../../../hooks/useIsMd";
+import { getDistance } from "../../../../scripts/distance";
 import { useOverlayContext } from "./OverlayContext";
-import { getScrollBounds } from "./TranslationBar/TlContent";
-import { getColorId } from "../../../scripts/color";
+import { getScrollBounds } from "../TranslationBar/TlContent";
+import { getColorId } from "../../../../scripts/color";
 
 const OverlayConnector = ({
   id,

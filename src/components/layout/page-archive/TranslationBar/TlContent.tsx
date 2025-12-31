@@ -13,9 +13,9 @@ import {
 } from "../../../../scripts/structs/item-data";
 import ButtonToggle from "../../../common/button-toggle";
 import TextBox from "../../../common/text-box";
-import OverlayProperty from "../OverlayProperty";
+import OverlayProperty from "./OverlayProperty";
 import type { TlOptionProps } from "./useTlOptions";
-import { useOverlayContext } from "../OverlayContext";
+import { useOverlayContext } from "../Overlay/OverlayContext";
 
 let scrollBounds = { x: 0, y: 0, w: 0, h: 0 };
 export const getScrollBounds = () => {

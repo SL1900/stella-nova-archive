@@ -1,4 +1,4 @@
-import type { positionMeta } from "../../../scripts/distance";
+import type { positionMeta } from "../../../../scripts/distance";
 
 const OverlayBoxliner = ({
   hovering,
