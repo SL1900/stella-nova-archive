@@ -11,7 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FetchFilesFromFolder } from "../../../scripts/database-loader";
 import { useDebugValue } from "../../../hooks/useDebugValue";
 import InfoHeader from "./InfoHeader";
-import { useOverlayContext } from "./OverlayContext";
+import { useOverlayContext } from "./Overlay/OverlayContext";
 import OverlayModal from "../../common/overlay-modal";
 import HyperLink from "../../common/hyperlink";
 

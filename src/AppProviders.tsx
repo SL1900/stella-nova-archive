@@ -5,7 +5,7 @@ import { ThemeProvider } from "./components/common/theme";
 import { FilterProvider } from "./components/layout/page-browse/FilterContext";
 import { SearchProvider } from "./components/layout/page-browse/SearchContext";
 import { SortProvider } from "./components/layout/page-browse/SortContext";
-import { OverlayProvider } from "./components/layout/page-archive/OverlayContext";
+import { OverlayProvider } from "./components/layout/page-archive/Overlay/OverlayContext";
 
 const AppProviders = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
