@@ -23,6 +23,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { getImageDimensions } from "../../../../scripts/image";
 import ButtonInput from "../../../common/button-input";
+import { useIsMd } from "../../../../hooks/useIsMd";
 
 export interface TlOptionProps {
   id: string;
@@ -44,6 +45,7 @@ const useTlOptions = ({
   setImgSrc: Dispatch<SetStateAction<string>>;
 }): TlOptionProps[] => {
   const navigate = useNavigate();
+  const isMd = useIsMd();
 
   const applyImageData = async (name: string, imgSrc: string) => {
     if (!item || !applyItem) return;
@@ -107,7 +109,7 @@ const useTlOptions = ({
       label: "Edit Mode",
       icon: <PenLine />,
       appearOn: { md: false, edit: false },
-      alwaysShowContentOnFull: true,
+      alwaysShowContentOnFull: false,
       method: handleNavigate,
     },
     {
@@ -146,7 +148,7 @@ const useTlOptions = ({
       appearOn: { md: false, edit: true },
       alwaysShowContentOnFull: true,
       content: item ? (
-        <ImageMetadata item={item} applyItem={applyItem} canCollapse={false} />
+        <ImageMetadata item={item} applyItem={applyItem} canCollapse={!isMd} />
       ) : (
         <></>
       ),
