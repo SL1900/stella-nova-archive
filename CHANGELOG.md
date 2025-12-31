@@ -1,5 +1,10 @@
 # CHANGELOGS
 
+## v4.2 - 2025/12/31 [#138](https://github.com/BB-69/stella-nova-archive/pull/138)
+
+- [backend] Collapse big component into multiple small components
+- [backend] Added reusable component `ButtonInput`
+
 ## v4.1 - 2025/12/29 [#124](https://github.com/BB-69/stella-nova-archive/pull/124)
 
 - Added version changelog & workflow
