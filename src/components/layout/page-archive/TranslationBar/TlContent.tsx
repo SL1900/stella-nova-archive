@@ -175,7 +175,9 @@ const TlContent = ({
                   >
                     <ButtonToggle
                       toggle={o.id !== activeModal}
-                      onToggle={() => setActiveModal(o.id)}
+                      onToggle={() =>
+                        o.content ? setActiveModal(o.id) : o.method?.()
+                      }
                       fullSize={true}
                       alwaysBorder={true}
                     >
