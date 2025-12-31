@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import {
   useOverlayContext,
   type OverlayMetaType,
-} from "../components/layout/page-archive/OverlayContext";
+} from "../components/layout/page-archive/Overlay/OverlayContext";
 import type { position } from "../scripts/distance";
 
 export function useOverlayReset() {

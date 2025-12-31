@@ -1,23 +1,11 @@
+import { createContext, type ReactNode, useState, useContext } from "react";
 import {
-  createContext,
-  type ReactNode,
-  useState,
-  useContext,
-  Fragment,
-} from "react";
-import OverlayConnector from "./OverlayConnector";
-import {
-  getAllDirPosition,
-  getBounded,
-  getDistance,
   positionMetaDefault,
   type positionMeta,
-} from "../../../scripts/distance";
-import { useDebugValue } from "../../../hooks/useDebugValue";
-import { getScrollBounds } from "./TranslationBar";
-import { getColorId } from "../../../scripts/color";
-import OverlayBoxliner from "./OverlayBoxliner";
-import useWindowSize from "../../../hooks/useWindowSize";
+} from "../../../../scripts/distance";
+import { useDebugValue } from "../../../../hooks/useDebugValue";
+import { getColorId } from "../../../../scripts/color";
+import OverlayApplier from "./OverlayApplier";
 
 export type OverlayMetaType = {
   [key: string]: { color?: string; hover: boolean };
@@ -112,8 +100,6 @@ export function OverlayProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const windowSize = useWindowSize();
-
   return (
     <OverlayContext.Provider
       value={{
@@ -128,62 +114,7 @@ export function OverlayProvider({ children }: { children: ReactNode }) {
       }}
     >
       {children}
-      {Object.entries(overlayTransforms).map(([id, t]) => {
-        const scrollBounds = getScrollBounds();
-
-        function getNearestPair(pos: positionMeta, ref: positionMeta) {
-          const from = getAllDirPosition(pos).sort(
-            (a, b) => getDistance(a, ref.p) - getDistance(b, ref.p)
-          )[0];
-          const to = getAllDirPosition(ref).sort(
-            (a, b) => getDistance(a, pos.p) - getDistance(b, pos.p)
-          )[0];
-          const PAD = 6;
-          return {
-            from: getBounded(from, {
-              s: { x: PAD, y: PAD },
-              e: { x: windowSize.width - PAD, y: windowSize.height - PAD },
-            }),
-            to: getBounded(to, {
-              s: { x: to.x, y: scrollBounds.y },
-              e: {
-                x: to.x,
-                y: scrollBounds.y + scrollBounds.h,
-              },
-            }),
-          };
-        }
-
-        function getBoundedOverlay(o: positionMeta): positionMeta {
-          const PAD = 0;
-          return {
-            p: getBounded(o.p, {
-              s: { x: PAD, y: PAD },
-              e: { x: windowSize.width - PAD, y: windowSize.height - PAD },
-            }),
-            t: Math.max(PAD, Math.min(windowSize.height - PAD, o.t)),
-            b: Math.max(PAD, Math.min(windowSize.height - PAD, o.b)),
-            l: Math.max(PAD, Math.min(windowSize.width - PAD, o.l)),
-            r: Math.max(PAD, Math.min(windowSize.width - PAD, o.r)),
-          };
-        }
-
-        const hovering = overlayMetas[id]?.hover ?? false;
-        const pair = getNearestPair(t.overlay, t.side);
-        const boundedBox = getBoundedOverlay(overlayTransforms[id].overlay);
-
-        return (
-          <Fragment key={id}>
-            <OverlayConnector
-              id={id}
-              from={pair.from}
-              to={pair.to}
-              hovering={hovering}
-            />
-            <OverlayBoxliner hovering={hovering} overlay={boundedBox} />
-          </Fragment>
-        );
-      })}
+      <OverlayApplier />
     </OverlayContext.Provider>
   );
 }
