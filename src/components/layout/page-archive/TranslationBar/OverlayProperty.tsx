@@ -1,10 +1,10 @@
-import { getColorId } from "../../../scripts/color";
+import { getColorId } from "../../../../scripts/color";
 import type {
   ItemMeta,
   ItemOverlay,
   ItemOverlayFraction,
-} from "../../../scripts/structs/item-data";
-import TextBox from "../../common/text-box";
+} from "../../../../scripts/structs/item-data";
+import TextBox from "../../../common/text-box";
 
 const OverlayProperty = ({
   meta,

@@ -1,7 +1,7 @@
 import { useMemo, useEffect, useRef, Fragment } from "react";
-import type { ItemData } from "../../../scripts/structs/item-data";
+import type { ItemData } from "../../../../scripts/structs/item-data";
 import { useOverlayContext } from "./OverlayContext";
-import { getColorId } from "../../../scripts/color";
+import { getColorId } from "../../../../scripts/color";
 
 const Overlay = ({
   item,
@@ -124,7 +124,7 @@ const Overlay = ({
               >
                 <div
                   className="absolute z-[1] w-[20px] h-[4px]
-                -translate-x-[10px] -translate-y-[2px]"
+                  -translate-x-[10px] -translate-y-[2px]"
                   style={{
                     backgroundColor: `${color}${
                       overlayMetas[o.id]?.hover ? "FF" : "00"
@@ -134,10 +134,10 @@ const Overlay = ({
                 />
                 <div
                   className={`absolute z-[1] w-[20px] h-[4px]
-                  -translate-x-[10px] -translate-y-[2px]
-                  bg-black [.dark_&]:bg-white
-                  ${!overlayMetas[o.id]?.hover && "opacity-0"}
-                `}
+                    -translate-x-[10px] -translate-y-[2px]
+                    bg-black [.dark_&]:bg-white
+                    ${!overlayMetas[o.id]?.hover && "opacity-0"}
+                  `}
                   style={{
                     transform: "rotate(135deg)",
                   }}
