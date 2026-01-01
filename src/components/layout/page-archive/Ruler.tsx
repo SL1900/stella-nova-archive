@@ -13,7 +13,7 @@ const Ruler = ({
   cursorPos: MotionValue<number>;
 }) => {
   const isHorizontal = orientation === "horizontal";
-  const { overlayActive, overlayMetas, overlayTransforms } =
+  const { overlayActive, overlayMetas, overlayTransformsRef } =
     useOverlayContext();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -40,8 +40,8 @@ const Ruler = ({
       style={isHorizontal ? { width: "auto" } : { height: "auto" }}
     >
       {/* --- Overlay marker --- */}
-      {Object.entries(overlayTransforms)
-        .sort(([_a, a], [_b, b]) => {
+      {Object.entries(overlayTransformsRef.current)
+        .sort(([, a], [, b]) => {
           if (!a.overlay || !b.overlay) return 0;
 
           function getLength(meta: positionMeta) {
