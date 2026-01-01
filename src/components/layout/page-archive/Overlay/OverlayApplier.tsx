@@ -12,19 +12,19 @@ import OverlayConnector from "./OverlayConnector";
 import { useOverlayContext } from "./OverlayContext";
 
 const OverlayApplier = () => {
-  const { overlayMetas, overlayTransforms } = useOverlayContext();
+  const { overlayMetas, overlayTransformsRef } = useOverlayContext();
 
   const windowSize = useWindowSize();
 
   return (
     <>
-      {Object.entries(overlayTransforms).map(([id, t]) => {
+      {Object.entries(overlayTransformsRef.current).map(([id, t]) => {
         if (
           !(
             t.overlay &&
             t.side &&
-            overlayTransforms[id].overlay &&
-            overlayTransforms[id].side
+            overlayTransformsRef.current[id].overlay &&
+            overlayTransformsRef.current[id].side
           )
         )
           return;
@@ -70,7 +70,9 @@ const OverlayApplier = () => {
 
         const hovering = overlayMetas[id]?.hover ?? false;
         const pair = getNearestPair(t.overlay, t.side);
-        const boundedBox = getBoundedOverlay(overlayTransforms[id].overlay);
+        const boundedBox = getBoundedOverlay(
+          overlayTransformsRef.current[id].overlay
+        );
 
         return (
           <Fragment key={id}>
