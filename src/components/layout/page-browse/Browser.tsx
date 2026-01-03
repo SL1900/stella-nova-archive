@@ -6,9 +6,9 @@ import {
 import { isItemData } from "../../../scripts/structs/item-data";
 import BrowseItem from "./BrowseItem";
 import { useDebugValue } from "../../_DebugTools/useDebugValue";
-import { useSortContext } from "./context/SortContext";
 import { useSearchQuery } from "../context/useSearchQuery";
 import { useFilterQuery } from "./context/useFilterQuery";
+import { useSortQuery } from "./context/useSortQuery";
 
 /* ---LOCAL_TEST--- */
 // const test_items: FetchedFile[] = [
@@ -90,7 +90,7 @@ const Browser = () => {
 
   const search = useSearchQuery();
   const filter = useFilterQuery();
-  const { sortQuery } = useSortContext();
+  const sort = useSortQuery();
 
   const [images, setImages] = useState<{ [key: string]: string }>({});
 
@@ -209,12 +209,12 @@ const Browser = () => {
     .filter((i) => i !== undefined)
     // sort
     .sort((a, b) =>
-      sortQuery != null
-        ? sortQuery.type == "name"
+      sort.query != null
+        ? sort.query.type == "name"
           ? a.data.title.localeCompare(b.data.title) *
-            (sortQuery.ascending ? 1 : -1)
+            (sort.query.ascending ? 1 : -1)
           : a.data.meta.version.localeCompare(b.data.meta.version) *
-            (sortQuery.ascending ? 1 : -1)
+            (sort.query.ascending ? 1 : -1)
         : 0
     )
     .map((i) => i.node);
