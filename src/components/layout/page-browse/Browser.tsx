@@ -5,10 +5,10 @@ import {
 } from "../../../scripts/database-loader";
 import { isItemData } from "../../../scripts/structs/item-data";
 import BrowseItem from "./BrowseItem";
-import { useSearchContext } from "../context/SearchContext";
 import { useDebugValue } from "../../_DebugTools/useDebugValue";
 import { useFilterContext } from "./context/FilterContext";
 import { useSortContext } from "./context/SortContext";
+import { useSearchQuery } from "../context/useSearchQuery";
 
 /* ---LOCAL_TEST--- */
 // const test_items: FetchedFile[] = [
@@ -88,7 +88,7 @@ const Browser = () => {
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { searchQuery } = useSearchContext();
+  const search = useSearchQuery();
   const { filterQuery } = useFilterContext();
   const { sortQuery } = useSortContext();
 
@@ -189,7 +189,7 @@ const Browser = () => {
         : [];
       if (
         !isItemData(item) ||
-        !item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        !item.title.toLowerCase().includes(search.query.toLowerCase()) ||
         // filter
         (filterQuery.length != 0
           ? filterQuery.some((t) => !itemTag.includes(t))
