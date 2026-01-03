@@ -11,11 +11,10 @@ import { FetchFilesFromFolder } from "../../../scripts/database-loader";
 import InfoHeader from "./InfoHeader";
 import { useOverlayContext } from "./Overlay/context/OverlayContext";
 import EditorDisclaimerModal from "./edit/EditorDisclaimerModal";
-import { useArchiveContext } from "./context/ArchiveContext";
+import { useArchive } from "./context/useArchive";
 
 const ArchiveLayout = () => {
-  const { tlBarCollapsed, setItem, setImgSrc, setEditing } =
-    useArchiveContext();
+  const { tlBarCollapsed, setItem, setImgSrc, setEditing } = useArchive();
 
   const location = useLocation();
   const params = new URLSearchParams(location.search);

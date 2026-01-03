@@ -15,7 +15,7 @@ import TextBox from "../../../common/text-box";
 import OverlayProperty from "./OverlayProperty";
 import type { TlOptionProps } from "./useTlOptions";
 import { useOverlayContext } from "../Overlay/context/OverlayContext";
-import { useArchiveContext } from "../context/ArchiveContext";
+import { useArchive } from "../context/useArchive";
 
 let scrollBounds = { x: 0, y: 0, w: 0, h: 0 };
 export const getScrollBounds = () => {
@@ -35,7 +35,7 @@ const TlContent = ({
 }) => {
   const { overlayMetas, setOverlayMeta, setOverlayTransform, removeOverlay } =
     useOverlayContext();
-  const { tlBarCollapsed, item, setItem, editing } = useArchiveContext();
+  const { tlBarCollapsed, item, setItem, editing } = useArchive();
 
   const [foldedTl, setFoldedTl] = useState<{ [key: string]: boolean }>({});
 
