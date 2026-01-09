@@ -32,7 +32,7 @@ const OverlayProperty = ({
       {editing && (
         <>
           <span className="text-sm flex items-center">UID</span>
-          <TextBox text={itemOverlay.uid} />
+          <TextBox text={itemOverlay.uid} foldOnInactive={true} />
         </>
       )}
       {!editing ? (
