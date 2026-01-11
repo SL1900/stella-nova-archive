@@ -138,10 +138,11 @@ const TlContent = ({
       */}
       <nav
         ref={overlayContainerRef}
-        className="md:flex md:flex-col grid md:grid-cols-none
+        className={`md:flex md:flex-col grid md:grid-cols-none
         grid-cols-[repeat(auto-fit,minmax(240px,1fr))] max-[240px]:grid-cols-none
         gap-2 mt-3 md:mb-14 px-2 md:px-0 pb-12
-        overflow-x-hidden overflow-y-auto"
+        overflow-x-hidden overflow-y-auto
+        ${tlBarCollapsed ? "no-scrollbar" : ""}`}
         aria-label="Translation bar"
       >
         {options.length > 0 && (
