@@ -19,7 +19,7 @@ const TlHeader = ({
 
   return (
     <div
-      className="group-unselectable flex items-center min-h-16 pb-3 min-w-full
+      className="group-unselectable flex items-center min-h-[64px] h-[64px] pb-3 min-w-full
       border-b border-black/30 [.dark_&]:border-white/30"
     >
       <button
