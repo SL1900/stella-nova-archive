@@ -1,5 +1,22 @@
 # CHANGELOGS
 
+## v5.4 - 2026/01/11 [#185](https://github.com/BB-69/stella-nova-archive/pull/185)
+
+- Added real time JSON -> ItemData conversion
+
+## v5.3 - 2026/01/11 [#182](https://github.com/BB-69/stella-nova-archive/pull/182)
+
+- [backend] Archive page remounts on param change.
+  - Using key change on url params for the the page subtree. This saves a lot of hustle on handling every variable in existence to avoid bugs just for param change in /archive page.
+
+## v5.2 - 2026/01/11 [#180](https://github.com/BB-69/stella-nova-archive/pull/180)
+
+- Fixed archive scroll related bug
+  - Added custom `no-scroll` css class to remove scrollbar while still making it scrollable
+  - [backend] Removed `tailwind-utils` since it's better anyway to cram all tailwind classes inside each component
+  - `TranslationBar` content scrolling space are now bounded properly using `overflow-hidden` instead of excessive paddings & margins
+- Increase `TranslationBar` unfold width
+
 ## v5.1 - 2026/01/09 [#169](https://github.com/BB-69/stella-nova-archive/pull/169)
 
 - Proper overlay cleanup using uid
