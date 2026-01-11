@@ -1,10 +1,12 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { ItemData } from "../../../scripts/structs/item-data";
 import { useEffect, useRef, useState } from "react";
+import { useArchive } from "./context/useArchive";
 
-const InfoHeader = ({ item }: { item: ItemData | null }) => {
+const InfoHeader = () => {
+  const { item } = useArchive();
+
   const containerRef = useRef<HTMLDivElement>(null);
-  const [edges, setEdges] = useState<{ atLeft: boolean; atRight: boolean }>({
+  const [edges, setEdges] = useState({
     atLeft: false,
     atRight: false,
   });

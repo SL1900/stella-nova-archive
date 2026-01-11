@@ -1,9 +1,10 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import QMark from "/assets/fallback/question-mark.svg";
 import Ruler from "./Ruler";
-import { useDebugValue } from "../../../hooks/useDebugValue";
-import type { ItemData } from "../../../scripts/structs/item-data";
-import Overlay from "./Overlay";
+import { useDebugValue } from "../../_DebugTools/useDebugValue";
+import Overlay from "./Overlay/Overlay";
+import { useMotionValue } from "framer-motion";
+import { useArchive } from "./context/useArchive";
 import SelectionArea from "./SelectionArea";
 
 let imgBounds = { x: 0, y: 0, w: 0, h: 0 };
@@ -11,37 +12,25 @@ export const getImageBounds = () => {
   return imgBounds;
 };
 
-const Content = ({
-  item,
-  imgSrc,
-  editing,
-  setCurrentItem,
-}: {
-  item: ItemData | null;
-  imgSrc: string;
-  editing: boolean;
-  setCurrentItem: Dispatch<SetStateAction<ItemData | null>>;
-}) => {
+const Content = () => {
+  const { item, imgSrc } = useArchive();
+
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [cursor, setCursor] = useState({ x: 0, y: 0 });
+  const cursorRef = useRef({ x: useMotionValue(0), y: useMotionValue(0) });
+
+  const handlePointerMove = (e: MouseEvent) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+
+    let x = e.clientX - rect.left;
+    let y = e.clientY - rect.top;
+
+    cursorRef.current.x.set(Math.floor(x));
+    cursorRef.current.y.set(Math.floor(y));
+  };
 
   useEffect(() => {
-    const handlePointerMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-
-      let x = e.clientX - rect.left;
-      let y = e.clientY - rect.top;
-
-      requestAnimationFrame(() =>
-        setCursor({
-          x: Math.floor(x),
-          y: Math.floor(y),
-        })
-      );
-    };
-
     window.addEventListener("mousemove", handlePointerMove);
     return () => window.removeEventListener("mousemove", handlePointerMove);
   }, []);
@@ -132,10 +121,10 @@ const Content = ({
       <div />
 
       {/* tr */}
-      <Ruler orientation="horizontal" cursorPos={cursor.x} />
+      <Ruler orientation="horizontal" cursorPos={cursorRef.current.x} />
 
       {/* bl */}
-      <Ruler orientation="vertical" cursorPos={cursor.y} />
+      <Ruler orientation="vertical" cursorPos={cursorRef.current.y} />
 
       {/* br */}
       <div
@@ -177,19 +166,16 @@ const Content = ({
         />
 
         <Overlay
-          item={item}
           resolution={resolution}
           display={display}
           offset={imageOffset}
-          editing={editing}
         />
 
         <SelectionArea
-            resolution={resolution}
-            display={display}
-            offset={imageOffset}
-            setItem={setCurrentItem}
-            imgRef={imgRef}
+        resolution={resolution}
+        display={display}
+        offset={imageOffset}
+        imgRef={imgRef}
         />
       </div>
     </div>
