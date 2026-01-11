@@ -50,19 +50,19 @@ const OverlayProperty = ({
           />
         </>
       )}
-      {(itemOverlay.notes != null || editing) &&
+      {((itemOverlay.notes || null) != null || editing) &&
         (!editing ? (
           <>
             <TextBox text={"Notes"} />
-            <TextBox text={itemOverlay.notes} />
+            <TextBox text={itemOverlay.notes || null} />
           </>
         ) : (
           <>
             <span className="text-sm flex items-center">Notes</span>
             <TextBox
               text={itemOverlay.notes}
-              edit={{ placeholder: itemOverlay.notes ?? "" }}
-              setText={(s) => applyOverlay({ notes: s.toString() })}
+              edit={{ placeholder: "" }}
+              setText={(s) => applyOverlay({ notes: s.toString() || null })}
             />
           </>
         ))}
