@@ -1,12 +1,12 @@
-import { useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 import type { ItemData } from "../../../scripts/structs/item-data";
 import HighlightedText from "../../common/highlighted-text";
 import TagLabels from "../../common/tag-labels";
-import { useSearchContext } from "./SearchContext";
 import QMark from "/assets/fallback/question-mark.svg";
 import BrowseItemModal from "./BrowseItemModal";
 import { CircleAlert } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useSearchQuery } from "../context/useSearchQuery";
 
 const BrowseItem = ({
   item,
@@ -19,8 +19,8 @@ const BrowseItem = ({
 }) => {
   const [hovered, setHovered] = useState<boolean>(false);
   const browseItemRef = useRef<HTMLDivElement>(null);
-  const { searchQuery } = useSearchContext();
 
+  const search = useSearchQuery();
   const navigate = useNavigate();
 
   const startIdx = url.search("/data/");
@@ -46,7 +46,7 @@ const BrowseItem = ({
         group-hover:border-white/30 group-hover:text-white"
       >
         {item.title ? (
-          <HighlightedText text={item.title} highlight={searchQuery} />
+          <HighlightedText text={item.title} highlight={search.query} />
         ) : (
           "< Untitled >"
         )}
@@ -89,25 +89,13 @@ const BrowseItem = ({
         />
       </div>
 
-      <BrowseItemModal onHover={hovered} parentRef={browseItemRef}>
-        <div className="w-[180px] pb-1 overflow-hidden">
-          <h3
-            className="flex justify-between items-top font-semibold text-lg
-          pb-1 border-b border-black/30 [.dark_&]:border-white/30
-          text-sm"
-          >
-            Description
-          </h3>
-          <span
-            className="mt-1.5 px-1 text-xs opacity-80
-            leading-tight block break-words"
-          >
-            {item.description ?? "< Untitled >"}
-          </span>
-        </div>
-      </BrowseItemModal>
+      <BrowseItemModal
+        onHover={hovered}
+        parentRef={browseItemRef}
+        description={item.description}
+      />
     </div>
   );
 };
 
-export default BrowseItem;
+export default memo(BrowseItem);

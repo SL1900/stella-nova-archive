@@ -1,22 +1,23 @@
-import { getColorId } from "../../../scripts/color";
+import { getColorId } from "../../../../scripts/color";
 import type {
   ItemMeta,
   ItemOverlay,
   ItemOverlayFraction,
-} from "../../../scripts/structs/item-data";
-import TextBox from "../../common/text-box";
+} from "../../../../scripts/structs/item-data";
+import TextBox from "../../../common/text-box";
+import { useArchive } from "../context/useArchive";
 
 const OverlayProperty = ({
   meta,
   itemOverlay,
-  editing,
   setOverlay,
 }: {
   meta: ItemMeta;
   itemOverlay: ItemOverlay;
-  editing: boolean;
   setOverlay?: (o: ItemOverlay) => void;
 }) => {
+  const { editing } = useArchive();
+
   const applyOverlay = (newO: ItemOverlayFraction) => {
     if (!setOverlay) return;
 
@@ -28,6 +29,12 @@ const OverlayProperty = ({
 
   return (
     <div className="group-selectable grid grid-cols-[60px_auto] auto-rows-[minmax(30px,auto)] gap-1">
+      {editing && (
+        <>
+          <span className="text-sm flex items-center">UID</span>
+          <TextBox text={itemOverlay.uid} foldOnInactive={true} />
+        </>
+      )}
       {!editing ? (
         <>
           <TextBox text={"Text"} />
@@ -43,19 +50,19 @@ const OverlayProperty = ({
           />
         </>
       )}
-      {(itemOverlay.notes != null || editing) &&
+      {((itemOverlay.notes || null) != null || editing) &&
         (!editing ? (
           <>
             <TextBox text={"Notes"} />
-            <TextBox text={itemOverlay.notes} />
+            <TextBox text={itemOverlay.notes || null} />
           </>
         ) : (
           <>
             <span className="text-sm flex items-center">Notes</span>
             <TextBox
               text={itemOverlay.notes}
-              edit={{ placeholder: itemOverlay.notes ?? "" }}
-              setText={(s) => applyOverlay({ notes: s.toString() })}
+              edit={{ placeholder: "" }}
+              setText={(s) => applyOverlay({ notes: s.toString() || null })}
             />
           </>
         ))}

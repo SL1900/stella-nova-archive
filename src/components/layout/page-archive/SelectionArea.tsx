@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
-import { defaultItemOverlay, type ItemData } from "../../../scripts/structs/item-data";
+import { useEffect, useRef, useState } from "react";
+import { defaultItemOverlay } from "../../../scripts/structs/item-data";
+import { useArchive } from "./context/useArchive";
 
 const SelectionArea = ({
     resolution,
     display,
     offset,
-    setItem,
     imgRef,
 } : {
     resolution: { w: number; h: number };
@@ -14,7 +14,6 @@ const SelectionArea = ({
         x: number;
         y: number;
     };
-    setItem: Dispatch<SetStateAction<ItemData | null>>;
     imgRef: React.RefObject<HTMLImageElement | null>
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -35,6 +34,8 @@ const SelectionArea = ({
     const currentPointRef = useRef(currentPoint);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const previewCanvasRef = useRef<HTMLCanvasElement>(null);
+
+    const { setItem } = useArchive();
 
     useEffect(()=>{
         cursorRef.current = cursor;

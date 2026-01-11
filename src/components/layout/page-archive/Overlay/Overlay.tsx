@@ -1,24 +1,22 @@
 import { useMemo, useEffect, useRef, Fragment } from "react";
-import type { ItemData } from "../../../scripts/structs/item-data";
-import { useOverlayContext } from "./OverlayContext";
-import { getColorId } from "../../../scripts/color";
+import { useOverlay } from "./context/useOverlay";
+import { getColorId } from "../../../../scripts/color";
+import { useArchive } from "../context/useArchive";
 
 const Overlay = ({
-  item,
   resolution,
   display,
   offset,
-  editing,
 }: {
-  item: ItemData | null;
   resolution: { w: number; h: number };
   display: { x: number; y: number; w: number; h: number };
   offset: {
     x: number;
     y: number;
   };
-  editing: boolean;
 }) => {
+  const { item, editing } = useArchive();
+
   const overlays = useMemo(() => {
     if (!item || !item?.overlays || resolution.w === 0 || resolution.h === 0)
       return [];
@@ -30,7 +28,7 @@ const Overlay = ({
       const { x, y, w, h } = o.bounds;
 
       return {
-        id: o.id,
+        uid: o.uid,
         left: offset.x + x * scaleX,
         top: offset.y + y * scaleY,
         width: w * scaleX,
@@ -42,14 +40,14 @@ const Overlay = ({
   }, [item, resolution, display]);
 
   const { overlayActive, overlayMetas, setOverlayMeta, setOverlayTransform } =
-    useOverlayContext();
+    useOverlay();
 
   useEffect(() => {
     if (!item?.overlays) return;
 
     item.overlays.forEach((o) =>
       setOverlayMeta({
-        [o.id]: {
+        [o.uid]: {
           color: o.color && o.color.length > 0 ? o.color : getColorId(o.id),
           hover: false,
         },
@@ -57,9 +55,9 @@ const Overlay = ({
     );
   }, [item]);
 
-  function toggleOverlayHover(id: string, to: boolean) {
+  function toggleOverlayHover(uid: string, to: boolean) {
     setOverlayMeta({
-      [id]: { hover: to },
+      [uid]: { hover: to },
     });
   }
 
@@ -67,12 +65,12 @@ const Overlay = ({
 
   useEffect(() => {
     overlays.forEach((o) => {
-      const overlay = overlayRefs.current[o.id];
+      const overlay = overlayRefs.current[o.uid];
       if (!overlay) return;
 
       const rect = overlay.getBoundingClientRect();
 
-      setOverlayTransform(true, o.id, {
+      setOverlayTransform(true, o.uid, {
         p: { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 },
         t: rect.top,
         b: rect.bottom,
@@ -85,12 +83,12 @@ const Overlay = ({
   return (
     <>
       {overlays.map((o) => {
-        const color = overlayMetas ? overlayMetas[o.id]?.color : "#888888";
+        const color = overlayMetas ? overlayMetas[o.uid]?.color : "#888888";
         return (
-          <Fragment key={o.id}>
+          <Fragment key={o.uid}>
             <div
               ref={(el) => {
-                overlayRefs.current[o.id] = el;
+                overlayRefs.current[o.uid] = el;
               }}
               className="absolute origin-top-left"
               style={{
@@ -103,16 +101,24 @@ const Overlay = ({
                   skew(${o.shear / 2}deg, ${o.shear / 2}deg)
                 `,
                 backgroundColor: `${color}${
-                  overlayMetas[o.id]?.hover ? "4A" : overlayActive ? "1F" : "00"
+                  overlayMetas[o.uid]?.hover
+                    ? "4A"
+                    : overlayActive
+                    ? "1F"
+                    : "00"
                 }`,
                 boxShadow: `inset 0 0 0 2px ${color}${
-                  overlayMetas[o.id]?.hover ? "FF" : overlayActive ? "66" : "00"
+                  overlayMetas[o.uid]?.hover
+                    ? "FF"
+                    : overlayActive
+                    ? "66"
+                    : "00"
                 }`,
               }}
               onPointerEnter={() =>
-                overlayActive ? toggleOverlayHover(o.id, true) : {}
+                overlayActive ? toggleOverlayHover(o.uid, true) : {}
               }
-              onPointerLeave={() => toggleOverlayHover(o.id, false)}
+              onPointerLeave={() => toggleOverlayHover(o.uid, false)}
             />
             {editing && (
               <div
@@ -124,20 +130,20 @@ const Overlay = ({
               >
                 <div
                   className="absolute z-[1] w-[20px] h-[4px]
-                -translate-x-[10px] -translate-y-[2px]"
+                  -translate-x-[10px] -translate-y-[2px]"
                   style={{
                     backgroundColor: `${color}${
-                      overlayMetas[o.id]?.hover ? "FF" : "00"
+                      overlayMetas[o.uid]?.hover ? "FF" : "00"
                     }`,
                     transform: "rotate(45deg)",
                   }}
                 />
                 <div
                   className={`absolute z-[1] w-[20px] h-[4px]
-                  -translate-x-[10px] -translate-y-[2px]
-                  bg-black [.dark_&]:bg-white
-                  ${!overlayMetas[o.id]?.hover && "opacity-0"}
-                `}
+                    -translate-x-[10px] -translate-y-[2px]
+                    bg-black [.dark_&]:bg-white
+                    ${!overlayMetas[o.uid]?.hover && "opacity-0"}
+                  `}
                   style={{
                     transform: "rotate(135deg)",
                   }}
